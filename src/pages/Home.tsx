@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import Table from '../components/table /Table'
+import Table from '../components/table/Table'
 
 function Home(): ReactElement {
   return (

@@ -6,10 +6,8 @@ interface LayoutProps {
 
 export const Layout = ({ children }: LayoutProps) => {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4">
+      <div className="relative w-[1920px] h-[2600px] bg-white">
         {children}
       </div>
-    </div>
   )
 } 

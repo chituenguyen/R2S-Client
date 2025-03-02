@@ -1,15 +1,13 @@
 import { ReactElement } from 'react'
-import Table from '../components/table/Table'
+import Header from '../components/header/Header';
 
-function Home(): ReactElement {
+function Home() {
   return (
-    <div className="">
-      <div>This is home page</div>      
-      <div className="overflow-x-auto rounded-lg shadow">
-        <Table />
-      </div>
+    <div>
+      <Header />
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;
+

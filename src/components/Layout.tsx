@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode } from "react"
 
 interface LayoutProps {
   children: ReactNode
@@ -6,10 +6,8 @@ interface LayoutProps {
 
 export const Layout = ({ children }: LayoutProps) => {
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-400 via-violet-500 to-purple-600">
-      <div className="container mx-auto px-4">
-        {children}
-      </div>
+    <div className="min-h-screen bg-white">
+      <div className="container mx-auto px-4">{children}</div>
     </div>
   )
-} 
+}

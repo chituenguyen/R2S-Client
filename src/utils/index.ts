@@ -10,7 +10,7 @@ export const getRoleStyles = (role: string) => {
   switch (role.toLowerCase()) {
     case Role.ADMIN:
       return {
-        bg    : 'bg-red-100',
+        bg    : 'bg-red-50',
         text  : 'text-red-800',
         border: 'border-red-200'
       }

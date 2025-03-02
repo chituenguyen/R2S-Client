@@ -12,15 +12,14 @@ function TableHeader() {
           Email
         </th>
         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-          Role
+          Phone
         </th>
       </tr>
     </thead>
   )
 }
 
-function TableRow({name, email, role}: {name: string, email: string, role: string}) {
-  const { bg, text, border } = getRoleStyles(role)
+function TableRow({name, email, phone}: {name: string, email: string, phone: string}) {
   return (
     <tr className="hover:bg-gray-50">
       <td className="px-6 py-4 whitespace-nowrap">
@@ -30,9 +29,7 @@ function TableRow({name, email, role}: {name: string, email: string, role: strin
         <div className="text-sm text-gray-500">{email}</div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
-        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${bg} ${text} ${border}`}>
-          {role}
-        </span>
+          {phone}
       </td>
     </tr>
   )
@@ -50,7 +47,7 @@ function Table() {
 
       <tbody className="bg-white divide-y divide-gray-200">
         {data.map((row, index) => (
-          <TableRow key={index} name = {row.name} email = {row.email} role = {row.role} />
+          <TableRow key={index} name = {row.name} email = {row.email} phone= {row.role} />
         ))}
       </tbody>
     </table>

@@ -268,43 +268,99 @@ function FooterEnd() {
       </ul>
       <ul className="ml-20 mt-5">
         <li className="font-bold text-[24px] mb-5">Company</li>
-        <li className="mb-2 text-gray-700">About Us</li>
-        <li className="mb-2 text-gray-700">Delivery Information</li>
-        <li className="mb-2 text-gray-700">Privacy Policy</li>
-        <li className="mb-2 text-gray-700">Terms & Conditions</li>
-        <li className="mb-2 text-gray-700">Contact Us</li>
-        <li className="mb-2 text-gray-700">Support Center</li>
-        <li className="mb-2 text-gray-700">Careers</li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">About Us</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Delivery Information</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Privacy Policy</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Terms & Conditions</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Contact Us</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Support Center</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Careers</a>
+        </li>
       </ul>
       <ul className="ml-20 mt-5">
         <li className="font-bold text-[24px] mb-5">Account</li>
-        <li className="mb-2 text-gray-700">Sign in</li>
-        <li className="mb-2 text-gray-700">View Cart</li>
-        <li className="mb-2 text-gray-700">My Wishlist</li>
-        <li className="mb-2 text-gray-700">Track My Order</li>
-        <li className="mb-2 text-gray-700">Help Ticket</li>
-        <li className="mb-2 text-gray-700">Shipping Details</li>
-        <li className="mb-2 text-gray-700">Compare products</li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Sign In</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">View Cart</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">My Wishlist</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Track My Order</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Help Ticket</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Shipping Details</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Compare products</a>
+        </li>
       </ul>
       <ul className="ml-20 mt-5">
         <li className="font-bold text-[24px] mb-5">Corporate</li>
-        <li className="mb-2 text-gray-700">Become a Vendor</li>
-        <li className="mb-2 text-gray-700">Affiliate Program</li>
-        <li className="mb-2 text-gray-700">Farm Business</li>
-        <li className="mb-2 text-gray-700">Farm Careers</li>
-        <li className="mb-2 text-gray-700">Our Suppliers</li>
-        <li className="mb-2 text-gray-700">Accessibility</li>
-        <li className="mb-2 text-gray-700">Promotions</li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Become a Vendor</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Affiliate Program</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Farm Business</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Farm Careers</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Our Suppliers</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Accessibility</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Promotions</a>
+        </li>
       </ul>
       <ul className="ml-20 mt-5">
         <li className="font-bold text-[24px] mb-5">Popular</li>
-        <li className="mb-2 text-gray-700">Milk & Flavoured Milk</li>
-        <li className="mb-2 text-gray-700">Butter and Margarine</li>
-        <li className="mb-2 text-gray-700">Eggs Substitutes</li>
-        <li className="mb-2 text-gray-700">Marmalades</li>
-        <li className="mb-2 text-gray-700">Sour Cream and Dips</li>
-        <li className="mb-2 text-gray-700">Tea & Kombucha</li>
-        <li className="mb-2 text-gray-700">Cheese</li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Milk & Flavoured Milk</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Butter and Margarine</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Eggs Substitutes</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Marmalades</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Sour Cream and Dips</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Tea & Kombucha</a>
+        </li>
+        <li className="mb-2 text-gray-700 hover:text-black">
+          <a href="#">Cheese</a>
+        </li>
       </ul>
       <ul className="ml-20 mt-5">
         <li className="font-bold text-[24px] mb-5">Install App</li>

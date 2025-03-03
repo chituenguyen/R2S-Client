@@ -1,47 +1,52 @@
-import React, { useState, useEffect } from 'react';
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  company: {
-    name: string;
-  };
-}
-
+import React, { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { fetchUsers } from '../../redux/slices/userSlice';
+import type { User } from '../../redux/types/user.types';
 
 const UserList: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string>('');
   const [clickCount, setClickCount] = useState(0);
+  const dispatch = useAppDispatch();
+  const { users, loading, error } = useAppSelector((state) => state.users);
+  console.log(users, loading, error);
+
+  useEffect(() => {
+    if (clickCount === 5) {
+      dispatch(fetchUsers());
+    }
+  }, [clickCount, dispatch]);
 
   const handleClick = () => {
     setClickCount(prev => prev + 1);
   };
-  const fetchUsers = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch('https://jsonplaceholder.typicode.com/users');
-      if (!response.ok) throw new Error('Failed to fetch');
-      const data = await response.json();
-      setUsers(data);
-      setError('');
-    } catch (err) {
-      setError('Failed to fetch users');
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  useEffect(() => {
-    // Only fetch when clickCount reaches 5
-    if (clickCount === 5) {
-      fetchUsers();
-    }
-  }, [clickCount]); // Add clickCount as dependency
+  // Skeleton component
+  const Skeleton = () => (
+    <div className="animate-pulse">
+      {[1, 2, 3, 4, 5].map((index) => (
+        <div key={index} className="mb-4 p-4 border rounded-lg bg-white">
+          <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+          <div className="h-3 bg-gray-200 rounded w-1/2 mb-2"></div>
+          <div className="h-3 bg-gray-200 rounded w-1/4"></div>
+        </div>
+      ))}
+    </div>
+  );
 
-  // ... existing Skeleton, ErrorMessage, and UserCard components ...
+  // Error component
+  const ErrorMessage = () => (
+    <div className="p-4 text-red-500 bg-red-100 rounded-lg">
+      <p className="text-center">{error}</p>
+    </div>
+  );
+
+  // User card component
+  const UserCard: React.FC<{ user: User }> = ({ user }) => (
+    <div className="p-4 border rounded-lg bg-white hover:shadow-md transition-shadow">
+      <h3 className="text-lg font-semibold text-gray-800">{user.name}</h3>
+      <p className="text-gray-600">{user.email}</p>
+      <p className="text-gray-500 text-sm">{user.company.name}</p>
+    </div>
+  );
 
   return (
     <div className="max-w-2xl mx-auto p-6">
@@ -66,13 +71,12 @@ const UserList: React.FC = () => {
         <div className="space-y-4">
           <h1 className="text-2xl font-bold mb-6">User List</h1>
           {loading ? (
-            // <Skeleton />
-            <div>Loading...</div>
+            <Skeleton />
           ) : error ? (
-            <div>Error: {error}</div>
+            <ErrorMessage />
           ) : (
             users.map(user => (
-              <div key={user.id}>{user.name}</div>
+              <UserCard key={user.id} user={user} />
             ))
           )}
         </div>

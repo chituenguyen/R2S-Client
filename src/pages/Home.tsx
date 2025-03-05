@@ -1,5 +1,5 @@
 import { ReactElement, useState } from "react"
-import { useDispatch, UseDispatch, useSelector } from "react-redux"
+import { UseDispatch, useSelector } from "react-redux"
 
 function Modal({
   themViecFunction,
@@ -54,11 +54,14 @@ function Home(): ReactElement {
     }
   ])
   // const [name, setName] = useState<string>('');
-  const [openModal, setOpenModal] = useState<boolean>(false)
+  // const [openModal, setOpenModal] = useState<boolean>(false)
   // const addUser = (name: string) => {
   //   setUser([...user, {id:String(Math.random()), name: name}]);
   // }
   const themViec = (titleNhapVao: string) => {
+    if (titleNhapVao == "") {
+      return
+    }
     setTodo([...todo, { id: String(Math.random()), title: titleNhapVao }])
   }
 

@@ -1,86 +1,87 @@
-import React, { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { fetchUsers } from '../../redux/slices/userSlice';
-import type { User } from '../../redux/types/user.types';
+import React, { FC, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { themTen } from '../../redux/slices/userSlice';
 
-const UserList: React.FC = () => {
-  const [clickCount, setClickCount] = useState(0);
-  const dispatch = useAppDispatch();
-  const { users, loading, error } = useAppSelector((state) => state.users);
-  console.log(users, loading, error);
+const UserModal: FC<{ isOpen: boolean; closeModal: () => void; addUser: (name: string) => void }> = ({
+  isOpen,
+  closeModal,
+  addUser,
+}) => {
+  const [name, setName] = useState<string>('');
 
-  useEffect(() => {
-    if (clickCount === 5) {
-      dispatch(fetchUsers());
-    }
-  }, [clickCount, dispatch]);
-
-  const handleClick = () => {
-    setClickCount(prev => prev + 1);
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    addUser(name);
+    closeModal();
   };
 
-  // Skeleton component
-  const Skeleton = () => (
-    <div className="animate-pulse">
-      {[1, 2, 3, 4, 5].map((index) => (
-        <div key={index} className="mb-4 p-4 border rounded-lg bg-white">
-          <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-          <div className="h-3 bg-gray-200 rounded w-1/2 mb-2"></div>
-          <div className="h-3 bg-gray-200 rounded w-1/4"></div>
-        </div>
-      ))}
-    </div>
-  );
-
-  // Error component
-  const ErrorMessage = () => (
-    <div className="p-4 text-red-500 bg-red-100 rounded-lg">
-      <p className="text-center">{error}</p>
-    </div>
-  );
-
-  // User card component
-  const UserCard: React.FC<{ user: User }> = ({ user }) => (
-    <div className="p-4 border rounded-lg bg-white hover:shadow-md transition-shadow">
-      <h3 className="text-lg font-semibold text-gray-800">{user.name}</h3>
-      <p className="text-gray-600">{user.email}</p>
-      <p className="text-gray-500 text-sm">{user.company.name}</p>
-    </div>
-  );
+  if (!isOpen) return null;
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <div className="mb-6 text-center">
-        <p className="text-lg mb-4">
-          Clicks remaining: {5 - clickCount}
-        </p>
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+        <h2 className="text-lg font-semibold mb-4">Thêm Người Dùng</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Nhập tên..."
+            className="w-full p-2 border rounded-md outline-none focus:ring focus:ring-indigo-300"
+            required
+          />
+          <div className="flex justify-end space-x-2">
+            <button type="button" onClick={closeModal} className="px-4 py-2 border rounded-md">
+              Hủy
+            </button>
+            <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-md">
+              Thêm
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+const UserList: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const dispatch = useDispatch();
+
+  const addUser = (name: string) => {
+    dispatch(themTen(name));
+  };
+
+  const { users, loading, error } = useSelector((state: any) => state.nameofUserReducer);
+
+  return (
+    <div className="max-w-lg mx-auto p-6">
+      <h1 className="text-2xl font-semibold text-center mb-6">Danh sách người dùng</h1>
+
+      <div className="flex justify-center mb-4">
         <button
-          onClick={handleClick}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
-          disabled={clickCount >= 5}
+          onClick={() => setIsModalOpen(true)}
+          className="px-4 py-2 bg-green-500 text-white rounded-md"
         >
-          Click me ({clickCount}/5)
+          + Thêm người dùng
         </button>
       </div>
 
-      {clickCount < 5 ? (
-        <div className="text-center text-gray-600">
-          Keep clicking! Data will load after 5 clicks.
-        </div>
+      {loading ? (
+        <p className="text-gray-500 text-center">Đang tải...</p>
+      ) : error ? (
+        <p className="text-red-500 text-center">{error}</p>
       ) : (
-        <div className="space-y-4">
-          <h1 className="text-2xl font-bold mb-6">User List</h1>
-          {loading ? (
-            <Skeleton />
-          ) : error ? (
-            <ErrorMessage />
-          ) : (
-            users.map(user => (
-              <UserCard key={user.id} user={user} />
-            ))
-          )}
+        <div className="space-y-3">
+          {users.map((user: any) => (
+            <div key={user.id} className="p-3 border rounded-md bg-white shadow-sm">
+              {user.name}
+            </div>
+          ))}
         </div>
       )}
+
+      {isModalOpen && <UserModal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)} addUser={addUser} />}
     </div>
   );
 };

@@ -4,7 +4,7 @@ import UserList from '../components/effect/api'
 function About(): ReactElement {
   return <div>
     About
-    <UseEffectDemo />
+    {/* <UseEffectDemo /> */}
     <UserList />
   </div>
 }

@@ -1,79 +1,78 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../api/axios';
-import {  User } from '../types/user.types';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import api from "../api/axios"
+import { Todo } from "../types/user.types"
 
-export interface UserState {
-  users: User[];
-  loading: boolean;
-  error: string | null;
+// export interface UserState {
+//   users: User[]
+//   loading: boolean
+//   error: string | null
+// }
+// const initialState: UserState = {
+//   users: [],
+//   loading: false,
+//   error: null
+// }
+
+export interface TodoState {
+  todos: Todo[]
+  loading: boolean
+  error: string | null
 }
-const initialState: UserState = {
-  users: [],
+const initialState: TodoState = {
+  todos: [],
   loading: false,
   error: null
-};
-
+}
 
 // Create async thunk for fetching users
-export const fetchUsers = createAsyncThunk(
-  'users/fetchUsers',
-  async () => {
-    console.log('fetchUsers');
-    try {
-      const response = await api.get<User[]>('/users');
-      return response.data;
-    } catch (error) {
-      // return rejectWithValue('Failed to fetch users');
-      console.log(error);
-    }
+export const fetchTodos = createAsyncThunk("todos/fetchTodos", async () => {
+  console.log("fetchTodos")
+  try {
+    const response = await api.get<Todo[]>("/todos")
+    return response.data
+  } catch (error) {
+    // return rejectWithValue('Failed to fetch users');
+    console.log(error)
   }
-);
+})
 
-
-const userSlice = createSlice({
-  name: 'users',
+const todoSlice = createSlice({
+  name: "todos",
   initialState,
   // xu ly sync action
-  reducers:{
-    themTen: (state, action) => {
-      //action.payload la user ma mn nhap vao.
-      state.users.push({
-        id: 1,
-        name: action.payload,
-        email: 'test@test.com',
-        address: {
-          street: '123 Main St',
-          city: 'Anytown',
-          zipcode: '12345'
-        },
-        company: {
-          name: 'Test Company'
-        }
-      })
+  reducers: {
+    themViec: (state, action) => {
+      state.todos = [...todos, action.payload]
+    },
+    xoaViec: (state, action) => {
+      state.todos = state.todos.filter((todos) => todos.id !== id)
+    },
+    resetViec: (state) => {
+      state.todos = []
     }
   },
   // xu ly async action
   extraReducers: (builder) => {
     builder
-      .addCase(fetchUsers.pending, (state) => {
-        console.log('fetchUsers.pending');
-        state.loading = true;
-        state.users = [];
-        state.error = null;
+      .addCase(fetchTodos.pending, (state) => {
+        console.log("fetchTodos.pending")
+        state.loading = true
+        state.users = []
+        state.error = null
       })
-      .addCase(fetchUsers.fulfilled, (state, action) => {
-        console.log('fetchUsers.fulfilled');
-        state.loading = false;
-        state.users = action.payload || [];
+      .addCase(fetchTodos.fulfilled, (state, action) => {
+        console.log("fetchTodos.fulfilled")
+        state.loading = false
+        state.users = action.payload || []
       })
-      .addCase(fetchUsers.rejected, (state, action) => {
-        console.log('fetchUsers.rejected');
-        state.loading = false;
-        state.error = action.payload as string;
-      });
-  },
-});
+      .addCase(fetchTodos.rejected, (state, action) => {
+        console.log("fetchTodos.rejected")
+        state.loading = false
+        state.error = action.payload as string
+      })
+  }
+})
 
-export const { themTen } = userSlice.actions;
+export const { themViec, xoaViec, resetViec } = todoSlice.actions
 
-export default userSlice.reducer; 
+export default todoSlice.reducer

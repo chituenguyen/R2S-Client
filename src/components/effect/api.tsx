@@ -1,17 +1,24 @@
-import React, { FC, useEffect, useState } from 'react';
-import { fetchUsers, themTen } from '../../redux/slices/userSlice';
-import type { User } from '../../redux/types/user.types';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { FC, useEffect, useState } from "react"
+import {
+  fetchTodos,
+  resetViec,
+  themViec,
+  xoaViec
+} from "../../redux/slices/userSlice"
+import type { Todo } from "../../redux/types/user.types"
+import { useDispatch, useSelector } from "react-redux"
 
-
-const UserModal: FC<{ isOpen: boolean, motcaiham: (name: string) => void }> = ({ isOpen, motcaiham }) => {
-  const [name, setName] = useState<string>('');
+const UserModal: FC<{ isOpen: boolean; motcaiham: (name: string) => void }> = ({
+  isOpen,
+  motcaiham
+}) => {
+  const [name, setName] = useState<string>("")
 
   const themTenTrongModal = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    motcaiham(name);
+    e.preventDefault()
+    motcaiham(name)
   }
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -19,7 +26,9 @@ const UserModal: FC<{ isOpen: boolean, motcaiham: (name: string) => void }> = ({
         <h2 className="text-xl font-bold mb-4">Add New User</h2>
         <form onSubmit={themTenTrongModal} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Name</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Name
+            </label>
             <input
               type="text"
               value={name}
@@ -45,25 +54,33 @@ const UserModal: FC<{ isOpen: boolean, motcaiham: (name: string) => void }> = ({
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const UserList: React.FC = () => {
   // const [clickCount, setClickCount] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const dispatch = useDispatch();
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const dispatch = useDispatch()
 
-  const themTenFunction = (name: string) => {
-    dispatch(themTen(name))
+  const themViecFunction = (title: string) => {
+    dispatch(themViec(title))
   }
 
-  const { users, loading, error } = useSelector((state: any) => state.nameofUserReducer);
+  const xoaViecFunction = (id: number) => {
+    dispatch(xoaViec(id))
+  }
+
+  const resetViecFunction = () => {
+    dispatch(resetViec())
+  }
+
+  const { users, loading, error } = useSelector(
+    (state: any) => state.nameofUserReducer
+  )
 
   // const handleClick = () => {
   //   setClickCount(prev => prev + 1);
   // };
-
-  
 
   const Skeleton = () => (
     <div className="animate-pulse">
@@ -75,13 +92,13 @@ const UserList: React.FC = () => {
         </div>
       ))}
     </div>
-  );
+  )
 
   const ErrorMessage = () => (
     <div className="p-4 text-red-500 bg-red-100 rounded-lg">
       <p className="text-center">{error}</p>
     </div>
-  );
+  )
 
   return (
     <div className="max-w-2xl mx-auto p-6">
@@ -106,26 +123,21 @@ const UserList: React.FC = () => {
       </div>
 
       <div className="space-y-4">
-          <h1 className="text-2xl font-bold mb-6">User List</h1>
-          {loading ? (
-            <Skeleton />
-          ) : error ? (
-            <ErrorMessage />
-          ) : (
-            users.map((user: any) => (
-              <div key={user.id}>{user.name}</div>
-            ))
-          )}
-        </div>
+        <h1 className="text-2xl font-bold mb-6">User List</h1>
+        {loading ? (
+          <Skeleton />
+        ) : error ? (
+          <ErrorMessage />
+        ) : (
+          users.map((user: any) => <div key={user.id}>{user.name}</div>)
+        )}
+      </div>
 
-        {
-          isModalOpen && <UserModal
-          isOpen={isModalOpen}
-          motcaiham = {themTenFunction}
-        />
-        }
+      {isModalOpen && (
+        <UserModal isOpen={isModalOpen} motcaiham={themTenFunction} />
+      )}
     </div>
-  );
-};
+  )
+}
 
-export default UserList;
+export default UserList

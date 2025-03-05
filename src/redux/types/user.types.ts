@@ -1,14 +1,18 @@
 export interface User {
-  id: number;
-  name: string;
-  email: string;
+  id: number
+  name: string
+  email: string
   address: {
-    street: string;
-    city: string;
-    zipcode: string;
+    street: string
+    city: string
+    zipcode: string
   }
   company: {
-    name: string;
-  };
+    name: string
+  }
 }
 
+export interface Todo {
+  id: number
+  title: string
+}

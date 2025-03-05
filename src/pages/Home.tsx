@@ -1,43 +1,98 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement, useState } from "react"
+import { UseDispatch, useSelector } from "react-redux"
 
-function Modal({themTenFunction}: {themTenFunction:(name: string) => void}){
-  const [nameCuaInput, setNameCuaInput] = useState<string>('');
-  console.log(nameCuaInput);
+function Modal({
+  themViecFunction,
+  resetViecFunction,
+  xoaViecFunction
+}: {
+  themViecFunction: (title: string) => void
+  resetViecFunction: () => void
+  xoaViecFunction: (id: number) => void
+}) {
+  const [titleCuaInput, setTitleCuaInput] = useState<string>("")
+  console.log(titleCuaInput)
   return (
-    <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
-      <div className='bg-white p-4 rounded-md'>
-        <div>Modal</div>
-        <input id='name' type="text" value={nameCuaInput} onChange={(e) => setNameCuaInput(e.target.value)} className='border-2 border-gray-300 rounded-md p-2' />
-        <button className='bg-blue-500 text-white px-4 py-2 rounded-md' onClick = {() => themTenFunction(nameCuaInput)}>Add</button>
+    <div>
+      <div className="text-center text-lg text-bold text-red-500">
+        <p>My Todo List</p>
+      </div>
+      <div className="bg-white p-4 rounded-md flex">
+        <input
+          id="title"
+          type="text"
+          value={titleCuaInput}
+          onChange={(e) => setTitleCuaInput(e.target.value)}
+          className="border-2 border-gray-300 rounded-md p-2"
+        />
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+          onClick={() => themViecFunction(titleCuaInput)}
+        >
+          Add
+        </button>
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+          onClick={() => resetViecFunction()}
+        >
+          Reset
+        </button>
       </div>
     </div>
   )
 }
 
 function Home(): ReactElement {
-  const [user, setUser] = useState<{id: string, name: string}[]>([{
-    id: '1',
-    name: 'John Doe'
-  }, {
-    id: '2',
-    name: 'Jane D'
-  }]);
+  const [todo, setTodo] = useState<{ id: number; title: string }[]>([
+    {
+      id: 1,
+      title: "Di choi"
+    },
+    {
+      id: 2,
+      title: "choi game"
+    }
+  ])
   // const [name, setName] = useState<string>('');
-  const [openModal, setOpenModal] = useState<boolean>(false);
+  // const [openModal, setOpenModal] = useState<boolean>(false)
   // const addUser = (name: string) => {
   //   setUser([...user, {id:String(Math.random()), name: name}]);
   // }
-  const themTen = (nameNhapVao: string) => {
-    setUser([...user, {id: String(Math.random()), name: nameNhapVao}])
+  const themViec = (titleNhapVao: string) => {
+    if (titleNhapVao == "") {
+      return
+    }
+    setTodo([...todo, { id: String(Math.random()), title: titleNhapVao }])
   }
+
+  const xoaViec = (id: string) => {
+    setTodo(todo.filter((todo) => todo.id !== id))
+  }
+
+  const resetViec = () => {
+    setTodo([])
+  }
+
   return (
     <div className="">
-      <button className='bg-blue-500 text-white px-4 py-2 rounded-md' onClick={() => setOpenModal(true)}>Open</button>
-      {user.map((user) => (
-        <div key={user.id}>{user.name}</div>
-      ))}
-
-      {openModal ? <Modal themTenFunction={themTen}/> : null}
+      <ul>
+        <li class="w-[200px] h-[100px]">
+          <Modal themViecFunction={themViec} resetViecFunction={resetViec} />
+        </li>
+        <li className="ml-4 w-[250px] relative">
+          {todo.map((todo) => (
+            <div className="border my-3 h-9 rounded-sm shadow-lg" key={todo.id}>
+              {todo.title}
+              <button
+                onClick={() => xoaViec(todo.id)}
+                className="absolute right-0 w-10 h-9 bg-emerald-400"
+              >
+                X
+              </button>
+            </div>
+          ))}
+        </li>
+      </ul>
     </div>
   )
 }

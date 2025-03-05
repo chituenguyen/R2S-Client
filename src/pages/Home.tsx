@@ -4,7 +4,7 @@ import Login from '../components/Authentication/Login';
 import UserList from '../components/hookcout';
 import EverydayFresh from '../components/everydayfresh';
 import DetailPost from '../components/everydayfresh';
-
+import { Link } from 'react-router-dom';
 
 function Home(): ReactElement {
   return (
@@ -14,6 +14,7 @@ function Home(): ReactElement {
       <Table />
       </div>
       <DetailPost />
+      <Link to="/about">about</Link>
     </div>
   )
 }

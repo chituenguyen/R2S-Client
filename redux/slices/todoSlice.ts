@@ -9,8 +9,13 @@ interface TodoState {
     todos: Todo[]
 }
 
+const loadTodosFromStorage = (): Todo[] => {
+  const storedTodos = localStorage.getItem('todos');
+  return storedTodos ? JSON.parse(storedTodos) : [];
+}
+
 const initialState: TodoState = {
-    todos: []
+    todos: loadTodosFromStorage()
 }
 
 const todoSlice = createSlice({
@@ -22,12 +27,17 @@ const todoSlice = createSlice({
           id: String(Math.random()),
           title: action.payload,
         });
+
+        localStorage.setItem('todos', JSON.stringify(state.todos));
       },
       deleteTodo: (state, action: PayloadAction<string>) => {
         state.todos = state.todos.filter(todo => todo.id !== action.payload);
+        localStorage.setItem('todos', JSON.stringify(state.todos));
       },
       resetTodos: (state) => {
         state.todos = [];
+
+        localStorage.removeItem('todos');
       }
     }
   });

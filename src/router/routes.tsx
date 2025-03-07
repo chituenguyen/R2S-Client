@@ -12,5 +12,5 @@ export const routes: RouteObject[] = [
     path: '/about',
     element: <About />,
     children: []
-  }
+  },
 ]

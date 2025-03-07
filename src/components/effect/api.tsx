@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { themTen } from '../../redux/slices/userSlice';
+import type { User } from '../../redux/types/user.types';
 
 const UserModal: FC<{ isOpen: boolean; closeModal: () => void; addUser: (name: string) => void }> = ({
   isOpen,

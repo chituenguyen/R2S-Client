@@ -3,6 +3,11 @@ import api from "../api/axios"
 import { PostItem, PostsResponse, Topic } from "../types/user.types"
 import { PostItem } from "./../types/user.types"
 
+export interface PostResponseState {
+  posts: { total: number; items: PostItem[] }
+  error: string | null
+}
+
 const initialState: PostResponseState = {
   posts: { total: 0, items: [] },
   error: null

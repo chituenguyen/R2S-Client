@@ -1,78 +1,45 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import api from "../api/axios"
-import { Todo } from "../types/user.types"
+import { PostItem, PostsResponse, Topic } from "../types/user.types"
+import { PostItem } from "./../types/user.types"
 
-// export interface UserState {
-//   users: User[]
-//   loading: boolean
-//   error: string | null
-// }
-// const initialState: UserState = {
-//   users: [],
-//   loading: false,
-//   error: null
-// }
-
-export interface TodoState {
-  todos: Todo[]
-  loading: boolean
-  error: string | null
-}
-const initialState: TodoState = {
-  todos: [],
-  loading: false,
+const initialState: PostResponseState = {
+  posts: { total: 0, items: [] },
   error: null
 }
 
 // Create async thunk for fetching users
-export const fetchTodos = createAsyncThunk("todos/fetchTodos", async () => {
-  console.log("fetchTodos")
-  try {
-    const response = await api.get<Todo[]>("/todos")
-    return response.data
-  } catch (error) {
-    // return rejectWithValue('Failed to fetch users');
-    console.log(error)
-  }
-})
-
-const todoSlice = createSlice({
-  name: "todos",
-  initialState,
-  // xu ly sync action
-  reducers: {
-    themViec: (state, action) => {
-      state.todos = [...todos, action.payload]
-    },
-    xoaViec: (state, action) => {
-      state.todos = state.todos.filter((todos) => todos.id !== id)
-    },
-    resetViec: (state) => {
-      state.todos = []
+export const fetchPostResponse = createAsyncThunk(
+  "posts/fetchPostResponse",
+  async () => {
+    try {
+      const response = await api.get<PostsResponse>("/posts") // Ensure the type matches API response
+      console.log("Fetched API Data:", response.data) // 🛑 Debugging API response
+      return response.data // Must return `{ total, items: [...] }`
+    } catch (error) {
+      console.error("API Error:", error)
+      return rejectWithValue("Failed to fetch posts")
     }
-  },
-  // xu ly async action
+  }
+)
+
+const PostResponseSlice = createSlice({
+  name: "posts",
+  initialState,
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchTodos.pending, (state) => {
-        console.log("fetchTodos.pending")
-        state.loading = true
-        state.users = []
-        state.error = null
+      .addCase(fetchPostResponse.pending, (state) => {
+        state.posts = { total: 0, items: [] }
       })
-      .addCase(fetchTodos.fulfilled, (state, action) => {
-        console.log("fetchTodos.fulfilled")
-        state.loading = false
-        state.users = action.payload || []
+      .addCase(fetchPostResponse.fulfilled, (state, action) => {
+        console.log("Redux Updated State:", action.payload) // 🛑 Debug Redux update
+        state.posts = action.payload || { total: 0, items: [] }
       })
-      .addCase(fetchTodos.rejected, (state, action) => {
-        console.log("fetchTodos.rejected")
-        state.loading = false
+      .addCase(fetchPostResponse.rejected, (state, action) => {
         state.error = action.payload as string
       })
   }
 })
 
-export const { themViec, xoaViec, resetViec } = todoSlice.actions
-
-export default todoSlice.reducer
+export default PostResponseSlice.reducer

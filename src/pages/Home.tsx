@@ -1,5 +1,6 @@
 import { ReactElement, useState } from "react"
 import { UseDispatch, useSelector } from "react-redux"
+import Detail from "./Detail"
 
 function Modal({
   themViecFunction,

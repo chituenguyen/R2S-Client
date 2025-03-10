@@ -19,7 +19,8 @@ function TableHeader() {
   )
 }
 
-function TableRow({name, email, phone}: {name: string, email: string, phone: string}) {
+function TableRow({name, email, phone}: {name: string, email: string, phone: string}) { 
+  const { bg, text, border } = getRoleStyles(phone)
   return (
     <tr className="hover:bg-gray-50">
       <td className="px-6 py-4 whitespace-nowrap">
@@ -29,13 +30,15 @@ function TableRow({name, email, phone}: {name: string, email: string, phone: str
         <div className="text-sm text-gray-500">{email}</div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
+      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${bg} ${text} ${border}`}>
           {phone}
+        </span>
       </td>
     </tr>
   )
 }
 
-function Table() {
+function Table() { 
   const [data, ] = useState([
     { name: 'John Doe', email: 'john@example.com', role: 'Admin' },
     { name: 'Jane Smith', email: 'jane@example.com', role: 'User' },

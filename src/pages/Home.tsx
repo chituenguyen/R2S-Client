@@ -1,20 +1,18 @@
-import { ReactElement } from 'react'
-import Table from '../components/table/Table'
-import Login from '../components/Authentication/Login';
-import UserList from '../components/hookcout';
-import EverydayFresh from '../components/everydayfresh';
-import DetailPost from '../components/everydayfresh';
-import { Link } from 'react-router-dom';
+
+import Table from '../components/table/Table';
+import React, { ReactElement } from 'react';
+import Header from '../components/Header/header';
+import PostDetail from '../components/effect/postDetail';
+
+
 
 function Home(): ReactElement {
   return (
     <div className="">
-      <div>This is home page</div>      
-      <div className="overflow-x-auto rounded-lg shadow">
-      <Table />
-      </div>
-      <DetailPost />
-      <Link to="/about">about</Link>
+      <Header/>
+     <div>Home page</div>
+     <Table />
+     <PostDetail/>
     </div>
   )
 }

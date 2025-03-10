@@ -1,14 +1,16 @@
 import { ReactElement } from 'react'
-import UseEffectDemo from '../components/effect'
-import UserList from '../components/effect/api'
-import TodoList from '../components/effect/todolist'
+import React from 'react'
+import PostList from '../components/effect/postlist';
+import Header from '../components/Header/header';
+
 function About(): ReactElement {
-  return <div>
-    About
-    {/* <UseEffectDemo /> */}
-    {/* <UserList /> */}
-    <TodoList />
+  return (
+  <div>
+    <Header/>
+    <div>About page</div>
+
   </div>
+  );
 }
 
 export default About

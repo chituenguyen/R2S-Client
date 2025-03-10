@@ -1,16 +1,26 @@
 import { RouteObject } from 'react-router-dom'
-import Home from '../pages/Home'
-import About from '../pages/About'
+import HomePage from '../pages/HomePage'
+import Postpage from '../pages/PostPage'
+import UserListPage from '../pages/UserListPage'
+
+// import PostDetail from '../components/effect/postDetail'
+
 
 export const routes: RouteObject[] = [
   {
     path: '/',
-    element: <Home />,
+    element: <HomePage/>,
     children: []
   },
   {
-    path: '/about',
-    element: <About />,
+   path: '/postpage',
+   element: <Postpage/>,
+   children:[]
+  },
+  {
+    path:'/userlistpage',
+    element: <UserListPage/>,
     children: []
-  }
+  },
+ 
 ]

@@ -1,13 +1,12 @@
 import { useEffect } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { fetchPostResponse } from "../../redux/slices/userSlice"
-import { useAppSelector } from "../../redux/hooks"
 import { PostsResponse, PostItem } from "../../redux/types/user.types"
 import { Link } from "react-router-dom"
 
 const UserList: React.FC = () => {
   const dispatch = useDispatch()
-  const { posts } = useAppSelector((state: PostResponse) => state.posts)
+  const { posts } = useSelector((state) => state.posts)
 
   useEffect(() => {
     dispatch(fetchPostResponse())
@@ -16,7 +15,7 @@ const UserList: React.FC = () => {
   return (
     <div className="max-w-2xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6 text-center">Post List</h1>
-      {posts?.items?.map((post: PostItem) => (
+      {posts?.items.map((post: PostItem) => (
         <Link to={`/detail/${post.id}`} className="space-y-4">
           <div
             key={post.id}

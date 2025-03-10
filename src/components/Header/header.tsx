@@ -28,6 +28,14 @@ function Header() {
                 Post
               </Link>
             </li>
+            <li>
+              <Link
+                to="/userlistpage"
+                className="hover:text-green-300 text-decoration-none text-white"
+              >
+                User List
+              </Link>
+            </li>
            </ul>
         </nav>
 

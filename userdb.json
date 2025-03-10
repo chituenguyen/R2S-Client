@@ -1,0 +1,74 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Nguyễn Văn A",
+      "email": "vana@example.com",
+      "img": "https://jbagy.me/wp-content/uploads/2025/03/anh-avatar-suy-nghi-mac-dinh-1.jpg",
+      "address": "123 Đường ABC, Quận 1, TP.HCM"
+    },
+    {
+      "id": 2,
+      "name": "Trần Thị B",
+      "email": "thib@example.com",
+      "img": "https://jbagy.me/wp-content/uploads/2025/03/anh-avatar-suy-nghi-mac-dinh-1.jpg",
+      "address": "456 Đường XYZ, Quận 2, TP.HCM"
+    },
+    {
+      "id": 3,
+      "name": "Lê Công C",
+      "email": "congc@example.com",
+      "img": "https://jbagy.me/wp-content/uploads/2025/03/anh-avatar-suy-nghi-mac-dinh-1.jpg",
+      "address": "789 Đường MNP, Quận 3, TP.HCM"
+    },
+    {
+      "id": 4,
+      "name": "Phạm Thị D",
+      "email": "thid@example.com",
+      "img": "https://jbagy.me/wp-content/uploads/2025/03/anh-avatar-suy-nghi-mac-dinh-1.jpg",
+      "address": "101 Đường QRS, Quận 4, TP.HCM"
+    },
+    {
+      "id": 5,
+      "name": "Hoàng Văn E",
+      "email": "vane@example.com",
+      "img": "https://jbagy.me/wp-content/uploads/2025/03/anh-avatar-suy-nghi-mac-dinh-1.jpg",
+      "address": "112 Đường TUV, Quận 5, TP.HCM"
+    },
+    {
+      "id": 6,
+      "name": "Võ Thị F",
+      "email": "thif@example.com",
+      "img": "https://jbagy.me/wp-content/uploads/2025/03/anh-avatar-suy-nghi-mac-dinh-1.jpg",
+      "address": "131 Đường WXY, Quận 6, TP.HCM"
+    },
+    {
+      "id": 7,
+      "name": "Đặng Công G",
+      "email": "congg@example.com",
+      "img": "https://jbagy.me/wp-content/uploads/2025/03/anh-avatar-suy-nghi-mac-dinh-1.jpg",
+      "address": "141 Đường ZAB, Quận 7, TP.HCM"
+    },
+    {
+      "id": 8,
+      "name": "Cao Thị H",
+      "email": "thih@example.com",
+      "img": "https://jbagy.me/wp-content/uploads/2025/03/anh-avatar-suy-nghi-mac-dinh-1.jpg",
+      "address": "151 Đường CDE, Quận 8, TP.HCM"
+    },
+    {
+      "id": 9,
+      "name": "Bùi Văn I",
+      "email": "vani@example.com",
+      "img": "https://jbagy.me/wp-content/uploads/2025/03/anh-avatar-suy-nghi-mac-dinh-1.jpg",
+      "address": "161 Đường FGH, Quận 9, TP.HCM"
+    },
+    {
+      "id": 10,
+      "name": "Đỗ Thị K",
+      "email": "thik@example.com",
+      "img": "https://jbagy.me/wp-content/uploads/2025/03/anh-avatar-suy-nghi-mac-dinh-1.jpg",
+      "address": "171 Đường IJK, Quận 10, TP.HCM"
+    }
+  ]
+}

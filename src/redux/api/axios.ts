@@ -14,6 +14,13 @@ const api = axios.create({
   },
 });
 
+export const getuser = async () => {
+  const res = await axios.get(
+    `http://localhost:3000/users`
+  );
+  return res.data;
+};
+
 
 
 export default api; 

@@ -6,6 +6,7 @@ import PostDetail from '../components/effect/postDetail';
 
 
 
+
 function Home(): ReactElement {
   return (
     <div className="">
@@ -13,6 +14,7 @@ function Home(): ReactElement {
      <div>Home page</div>
      <Table />
      <PostDetail/>
+     
     </div>
   )
 }

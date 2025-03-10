@@ -1,0 +1,8 @@
+{
+    "tickets": [
+      { "id": 1, "name": "Vé ngày", "price": 20000 },
+      { "id": 2, "name": "Vé tháng", "price": 150000 },
+      { "id": 3, "name": "Vé quý", "price": 400000 }
+    ]
+  }
+  

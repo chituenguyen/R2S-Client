@@ -1,6 +1,5 @@
 import { RouteObject } from 'react-router-dom'
-import Home from '../pages/Home'
-import About from '../pages/About'
+import HomePage from '../pages/HomePage'
 import Postpage from '../pages/PostPage'
 import UserListPage from '../pages/UserListPage'
 
@@ -10,12 +9,7 @@ import UserListPage from '../pages/UserListPage'
 export const routes: RouteObject[] = [
   {
     path: '/',
-    element: <Home />,
-    children: []
-  },
-  {
-    path: '/about',
-    element: <About />,
+    element: <HomePage/>,
     children: []
   },
   {

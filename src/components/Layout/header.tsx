@@ -17,7 +17,7 @@ function Header() {
           <ul className="flex justify-around items-center space-x-8 text-black text-2xl ">
             <li>
             <Link
-                to="/about"
+                to="/"
                 className=" text-decoration-none hover:underline"
               >
                 Home
@@ -25,7 +25,7 @@ function Header() {
             </li>
             <li>
             <Link
-                to="/postpage"
+                to="/"
                 className=" text-decoration-none hover:underline"
               >
                 Contact
@@ -33,7 +33,7 @@ function Header() {
             </li>
             <li>
               <Link
-                to="/userlistpage"
+                to="/"
                 className= "text-decoration-none hover:underline"
               >
                About
@@ -41,7 +41,7 @@ function Header() {
             </li>
             <li>
               <Link
-                to="/userlistpage"
+                to="/signup"
                 className=" text-decoration-none hover:underline"
               >
                Sign Up
@@ -56,10 +56,10 @@ function Header() {
             <Search/>
             </li>
             <li>
-              <FaRegHeart/>
+              <FaRegHeart className="transition hover:scale-110"/>
             </li>
             <li>
-              <FiShoppingCart/>
+              <FiShoppingCart className="transition hover:scale-110"/>
             </li>
           </ul>
         </nav>

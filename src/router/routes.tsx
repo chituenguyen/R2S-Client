@@ -1,7 +1,8 @@
 import { RouteObject } from 'react-router-dom'
 import HomePage from '../pages/HomePage'
 import Postpage from '../pages/PostPage'
-import UserListPage from '../pages/UserListPage'
+import SignUp from '../components/Authentication/SignUp'
+import SignIn from '../components/Authentication/SignIn'
 
 // import PostDetail from '../components/effect/postDetail'
 
@@ -18,9 +19,15 @@ export const routes: RouteObject[] = [
    children:[]
   },
   {
-    path:'/userlistpage',
-    element: <UserListPage/>,
-    children: []
+    path: '/signup',
+    element: <SignUp/>,
+    children:[]
   },
+  {
+    path: '/signin',
+    element: <SignIn/>,
+    children:[]
+  },
+
  
 ]

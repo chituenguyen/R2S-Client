@@ -13,7 +13,7 @@ function Search(){
         <button
           className="focus:outline-none text-black"
         >
-          <FaMagnifyingGlass className="h-6 w-6 transition" />
+          <FaMagnifyingGlass className="h-6 w-6 transition hover:scale-110" />
         </button>
       </label>
 

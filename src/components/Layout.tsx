@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode } from "react"
 
 interface LayoutProps {
   children: ReactNode
@@ -7,9 +7,7 @@ interface LayoutProps {
 export const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4">
-        {children}
-      </div>
+      <div className="w-full">{children}</div>
     </div>
   )
-} 
+}

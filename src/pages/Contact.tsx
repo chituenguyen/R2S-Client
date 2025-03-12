@@ -2,16 +2,14 @@ import { ReactElement } from "react"
 import Table from "../components/table/Table"
 import Header from "../components/header/header"
 import Footer from "../components/footer/Footer"
-import ProductPage from "../components/homepage/HomePage"
 
-function Home(): ReactElement {
+function Contact(): ReactElement {
   return (
     <div className="">
       <Header />
-      <ProductPage />
       <Footer />
     </div>
   )
 }
 
-export default Home
+export default Contact

@@ -2,16 +2,17 @@ import { ReactElement } from "react"
 import Table from "../components/table/Table"
 import Header from "../components/header/header"
 import Footer from "../components/footer/Footer"
-import ProductPage from "../components/homepage/HomePage"
+import SigninPage from "../components/aut/Signin"
 
-function Home(): ReactElement {
+
+function Signin(): ReactElement {
   return (
     <div className="">
       <Header />
-      <ProductPage />
+      <SigninPage />
       <Footer />
     </div>
   )
 }
 
-export default Home
+export default Signin

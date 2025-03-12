@@ -2,16 +2,16 @@ import { ReactElement } from "react"
 import Table from "../components/table/Table"
 import Header from "../components/header/header"
 import Footer from "../components/footer/Footer"
-import ProductPage from "../components/homepage/HomePage"
+import LoginPage from "../components/aut/Login"
 
-function Home(): ReactElement {
+function Login(): ReactElement {
   return (
     <div className="">
       <Header />
-      <ProductPage />
+      <LoginPage />
       <Footer />
     </div>
   )
 }
 
-export default Home
+export default Login

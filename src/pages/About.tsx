@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { ReactElement } from 'react'
 import UseEffectDemo from '../components/effect'
 import UserList from '../components/effect/api'
@@ -9,6 +10,19 @@ function About(): ReactElement {
     {/* <UseEffectDemo /> */}
     <PostList />
   </div>
+=======
+import { ReactElement } from "react"
+import Header from "../components/Header/Header"
+import Footer from "../components/Layout/Footer"
+
+function About(): ReactElement {
+  return (
+    <div className="">
+      <Header />
+      <Footer />
+    </div>
+  )
+>>>>>>> Stashed changes
 }
 
 export default About

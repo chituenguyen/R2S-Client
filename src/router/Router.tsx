@@ -11,5 +11,5 @@ export const Router = () => {
     <BrowserRouter>
       <RouterContent />
     </BrowserRouter>
-  )
-}
+  );
+};

@@ -1,176 +1,133 @@
 import React, { useState } from "react";
-import * as product from "../../src/api/product"
+import * as product from "../api/product";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { AiFillCaretLeft,AiFillCaretRight } from "react-icons/ai";
-import { CiHeart,CiStar  } from "react-icons/ci";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { FaStar } from "react-icons/fa";
+import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
+import ProductSkeleton from "../components/Skeleton/ProductSkeleton";
+import { TbTruckDelivery } from "react-icons/tb";
+import { RiCustomerService2Fill } from "react-icons/ri";
+import { IoShieldCheckmarkOutline } from "react-icons/io5";
+import ProductList from "../components/List/ProductList";
 
+let PRODUCT_PER_PAGE = 8; // Số sản phẩm hiển thị trên mỗi trang
+interface Product {
+  id: number;
+  name: string;
+  price: string;
+  description: string;
+  images: string[];
+  category: string;
+  brand: string;
+  rate: number;
+  stock: number;
+  is_active: boolean;
+};
 
+function HomePage() {
+  const { data, isPending, error } = useQuery({
+    queryKey: ["product"],
+    queryFn: () => product.getProductList(),
+  });
+  console.log("Data:", data);
+  // console.log("Data.data:", data.data);
+  const [currentProduct, setCurrentProduct] = useState(1);
 
-const PRODUCT_PER_PAGE = 8; // Số sản phẩm hiển thị trên mỗi trang
+  // Tính toán các sản phẩm cho trang hiện tại
+  const startIndex = (currentProduct - 1) * PRODUCT_PER_PAGE;
+  const endIndex = startIndex + PRODUCT_PER_PAGE;
+  const currentProductList = data ? data.data.slice(startIndex, endIndex) : [];
 
-function HomePage(){
-    const { data, isPending, error } = useQuery({
-        queryKey: ["product"],
-        queryFn: () => product.getProductList(),
-      });
-    console.log("Data:", data);
-    console.log("Data.data:", data.data);
-    const [currentProduct, setCurrentProduct] = useState(1);
-    
-    // Tính toán các sản phẩm cho trang hiện tại
-    const startIndex = (currentProduct - 1) * PRODUCT_PER_PAGE;
-    const endIndex = startIndex + PRODUCT_PER_PAGE;
-    const currentProductList = data ? data.data.slice(startIndex, endIndex) : [];
-    
-    console.log("currentProductList:", currentProductList);
-    const totalProduct = data ? Math.ceil(data.length / PRODUCT_PER_PAGE) : 0;
-    
+  console.log("currentProductList:", currentProductList);
+  const totalProduct = data ? Math.ceil(data.length / PRODUCT_PER_PAGE) : 0;
+  const slug = 0;
 
-    const Skeleton = () => (
-      <div className="animate-pulse">
-          {[1, 2, 3, 4, 5].map((index) => (
-              <div key={index} className="mb-4 p-4 border rounded-lg bg-white">
-                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                  <div className="h-3 bg-gray-200 rounded w-1/2 mb-2"></div>
-                  <div className="h-3 bg-gray-200 rounded w-1/4"></div>
-              </div>
-          ))}
-      </div>
-  );
-    return(
-      <div className="max-w-screen-xl mx-auto py-6">
+  const handleShowAllProducts = () => {
+    setCurrentProduct(1); // Reset về trang đầu tiên
+    PRODUCT_PER_PAGE = data.data.length; // Hiển thị tất cả sản phẩm trên 1 trang
+  };
+
+  return (
+    <div className="max-w-screen-xl mx-auto py-6 mt-[50px]">
       <header className="mb-10">
-          <div className="flex items-center">
-            <div className="bg-red-500 w-2 h-8 mr-2"></div> 
-            <div className="text-red-500 font-medium text-sm">Our Products</div>
-          </div>
+        <div className="flex items-center">
+          <div className="bg-red-500 w-2 h-8 mr-2"></div>
+          <div className="text-red-500 font-medium text-sm">Our Products</div>
+        </div>
+        <div className="flex items-center space-x-4 justify-between">
           <div className="text-4xl font-semibold mt-2">Explore Our Products</div>
+          <div className="flex items-center space-x-2 ml-auto">
+            <button className="bg-gray-100 rounded-full p-2">
+              <AiFillCaretLeft className="h-5 w-5" />
+            </button>
+            <button className="bg-gray-100 rounded-full p-2">
+              <AiFillCaretRight className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
       </header>
       <div>
         <section>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div    className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300"
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      height: "100%",
-                    }}>
-              <div className="bg-gray-100 p-4 relative">
-                <div className="p-10 flex justify-center items-center">
-                  <img src="https://s3-alpha-sig.figma.com/img/78e7/2711/8c99fe72271cf43f5e3566b39ca7c8f4?Expires=1742774400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=rh2lM429IhG6Sx43K65-eEwSmHdPKCww6BvHju8il69EEjKLK8ANEcwzkG8Xu8KOVz-5ysEB-UQdnR7K3PKvd-7zFr-g9QKO-lsScRHmuRedQyWqKf8m2~3m0pWgkMGt~l94NSHZPsrTrkGbNYDINEUfZup-JcPjC~bzNDxLxBzjzWD~DCjKS-UpXRP9r5MgrLI4Veiz-AEErjGUBuCJO5OZVRBPY50d6lXCK9v8Vmdg-kxnrsXaxlGB1RlnSQ4Ut~afIt3ofyAj8M5DsaZfk08YteujgRrfxnaIpM8AJdjwEl35rRr8IEBeA2Mr7jL-orlEciQ2BAw4DFDli2ujTQ__" alt="Cesar Dry Dog Food" className="h-[180px] w-[115px]" />
-                </div>
-                <div className="absolute top-4 right-4 flex flex-col space-y-2"
-                      style={{
-                        transform: "translateX(10px)", // Dịch chuyển sang phải
-                      }}
-                      >
-                    <CiHeart className="h-6 w-6 text-gray-600"/>
-                    <MdOutlineRemoveRedEye className="h-6 w-6 text-gray-600"/>
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <div className="font-semibold text-lg">Breed Dry Dog Food</div>
-                <div className="flex items-center space-x-2">
-                  <div className="font-bold text-red-500">$100</div>
-                  <div className="flex">
-                    <FaStar className="text-yellow-500" />
-                    <FaStar className="text-yellow-500" />
-                    <FaStar className="text-yellow-500" />
-                    <CiStar/>
-                    <CiStar/>
-                  </div>
-                  <div className="text-gray-500">(35)</div>
-                </div>
-              </div>
-            </div>
-          </div>
+          {isPending ? (
+            <ProductSkeleton />
+          ) : (
+            <ProductList  PRODUCT_PER_PAGE={PRODUCT_PER_PAGE}/>
+          )}
         </section>
-      </div>
-      {/* Posts Section */}
-      {/* <section>
-        {isPending ? (
-          <Skeleton/>
-        ) : (
-          <div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {currentProductList.length === 0 ? (
-                <p className="text-gray-600">Không có bài viết nào.</p>
-              ) : (
-                currentProductList.map((data:any) => (
-                  <div
-                    key={data.id}
-                    className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300"
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      height: "100%",
-                    }}
-                  >
-                    <img
-                      src={data.image || "https://via.placeholder.com/400x200"}
-                      alt={data.name}
-                      className="w-full h-48 object-cover"
-                    />
-                    <div className="p-4 flex-grow">
-                      <h3 className="text-xl font-semibold mb-2">
-                        <div>{data.name}</div>
-                      </h3>
-                      <p className="text-gray-600 text-sm">
-                        {new Date(data.brand).toLocaleDateString("vi-VN")}
-                      </p>
-                      <p className="text-gray-700 mt-2 text-sm line-clamp-3">
-                        {data.description}
-                      </p>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
 
-           
-            {totalProduct > 1 && (
-              <div className="flex justify-center items-center mt-6 space-x-4">
-                <button
-                  onClick={() =>
-                  setCurrentProduct((prev) => Math.max(prev - 1, 1))
-                  }
-                  className={`w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center ${
-                  currentProduct === 1
-                  ? "text-gray-400 cursor-not-allowed"
-                  : "text-gray-700 hover:bg-gray-200"
-                  }`}
-                  // disabled={currentProduct === 1}
-                >
-                  <AiFillCaretLeft />
-              </button>
-            <p className="text-gray-700 text-sm translate-y-2">
-                Trang <span className="font-semibold">{currentProduct}</span> /{" "}
-                {totalProduct}
-            </p>
+        {/* Nút "Show All Products" */}
+        {currentProductList.length < data?.data.length && (
+          <div className="col-span-full text-center mt-4 ">
+            <div className="border-t border-gray-300 w-full mt-4"></div>
             <button
-              onClick={() =>
-                setCurrentProduct((prev) => Math.min(prev + 1, totalProduct))
-                }
-              className={`w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center ${
-                currentProduct === totalProduct
-                ? "text-gray-400 cursor-not-allowed"
-                : "text-gray-700 hover:bg-gray-200"
-                }`}
-      // disabled={currentProduct === totalProduct}
-              >
-                <AiFillCaretRight />
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-10  rounded "
+              onClick={handleShowAllProducts}
+            >
+              View All Products
             </button>
           </div>
         )}
+      </div>
+      <div className="bg-white py-12 pt-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Free and Fast Delivery */}
+            <div className="text-center">
+              <div className="bg-gray-200 rounded-full p-4 inline-flex items-center justify-center mb-4">
+                <div className="bg-black rounded-full p-4 inline-flex items-center justify-center ">
+                  <TbTruckDelivery className="text-white w-[32px] h-[32px]" />
+                </div>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">FREE AND FAST DELIVERY</h3>
+              <p className="text-gray-600">Free delivery for all orders over $140</p>
+            </div>
+
+            {/* 24/7 Customer Service */}
+            <div className="text-center">
+              <div className="bg-gray-200 rounded-full p-4 inline-flex items-center justify-center mb-4">
+                <div className="bg-black rounded-full p-4 inline-flex items-center justify-center ">
+                  <RiCustomerService2Fill className="text-white w-[32px] h-[32px]" />
+                </div>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">24/7 CUSTOMER SERVICE</h3>
+              <p className="text-gray-600">Friendly 24/7 customer support</p>
+            </div>
+
+            {/* Money Back Guarantee */}
+            <div className="text-center">
+              <div className="bg-gray-200 rounded-full p-4 inline-flex items-center justify-center mb-4">
+                <div className="bg-black rounded-full p-4 inline-flex items-center justify-center ">
+                  <IoShieldCheckmarkOutline className="text-white w-[32px] h-[32px]" />
+                </div>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">MONEY BACK GUARANTEE</h3>
+              <p className="text-gray-600">We return money within 30 days</p>
+            </div>
           </div>
-        )}
-      </section> */}
+        </div>
+      </div>
+      <div className="border-t border-gray-300 w-full"></div>
     </div>
   );
 }
 
-export default HomePage
+export default HomePage;

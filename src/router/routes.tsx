@@ -3,6 +3,7 @@ import HomePage from '../pages/HomePage'
 import Postpage from '../pages/PostPage'
 import SignUp from '../components/Authentication/SignUp'
 import SignIn from '../components/Authentication/SignIn'
+import ProductDetail from '../components/Detail/Productdetail'
 
 // import PostDetail from '../components/effect/postDetail'
 
@@ -28,6 +29,12 @@ export const routes: RouteObject[] = [
     element: <SignIn/>,
     children:[]
   },
+  {
+    path: '/detail/:slug',
+    element: <ProductDetail/>,
+    children:[]
+  },
+
 
  
 ]

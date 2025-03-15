@@ -1,8 +1,6 @@
 {
-  "name": "userdb.json",
   "version": "v1.22.22",
   "scripts": {
-    "devdb": "nodemon maindb.js",
     "dev": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview --port 3000",

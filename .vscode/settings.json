@@ -20,5 +20,10 @@
   "cSpell.ignorePaths": [
       "**/node_modules/**",
       "**/dist/**"
+  ],
+  "cSpell.words": [
+    "detaildata",
+    "Logindata",
+    "Productdetail"
   ]
 }

@@ -1,5 +1,12 @@
-function HomePage() {
-  return <div>HomePage</div>
-}
+import React from "react";
+import OurProduct from "../components/OurProduct"; // Adjust path if needed
 
-export default HomePage
+const HomePage = () => {
+  return (
+    <div>
+      <OurProduct />
+    </div>
+  );
+};
+
+export default HomePage;

@@ -6,6 +6,7 @@ import "./App.css"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { QueryClient } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
+import { ToastContainer } from "react-toastify";
 
 const queryClient = new QueryClient()
 createRoot(document.getElementById("root") as HTMLElement).render(
@@ -15,6 +16,7 @@ createRoot(document.getElementById("root") as HTMLElement).render(
       <Layout>
         <Router />
       </Layout>
+      <ToastContainer />
     </QueryClientProvider>
   </React.StrictMode>
 )

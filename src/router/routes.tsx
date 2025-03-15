@@ -12,11 +12,15 @@ import Contact from '../pages/Contact'
 import Cart from '../Cart/Cart'
 
 // import PostDetail from '../components/effect/postDetail'
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 export const routes: RouteObject[] = [
   {
     path: '/',
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     element: <Home />,
     children: []
@@ -30,6 +34,12 @@ export const routes: RouteObject[] = [
     children: []
   },
   {
+=======
+    element: <HomePage/>,
+    children: []
+  },
+  {
+>>>>>>> Stashed changes
    path: '/postpage',
    element: <Postpage/>,
    children:[]
@@ -53,6 +63,9 @@ export const routes: RouteObject[] = [
     path: '/contact',
     element: <Contact/>,
     children:[]
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   },
 ]

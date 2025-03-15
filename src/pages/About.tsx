@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { ReactElement } from 'react'
 import UseEffectDemo from '../components/effect'
 import UserList from '../components/effect/api'
@@ -11,6 +12,8 @@ function About(): ReactElement {
     <PostList />
   </div>
 =======
+=======
+>>>>>>> Stashed changes
 import { ReactElement } from "react"
 import Header from "../components/Header/Header"
 import Footer from "../components/Layout/Footer"
@@ -22,6 +25,9 @@ function About(): ReactElement {
       <Footer />
     </div>
   )
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 }
 

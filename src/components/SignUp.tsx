@@ -14,13 +14,19 @@ const SignUp = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSignUp = async () => {
+  const handleSignUp = async (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     try {
+      if (!formData.email || !formData.password) {
+        toast.error("Please enter email and password");
+        return;
+      }
       const response = await axios.post("http://localhost:3000/api/auth/register", formData);
 
       toast.success("Account created successfully!", { autoClose: 1500 });
       
       setTimeout(() => {
+        // redirect react router dom
         window.location.href = "/login"; // Chuyển hướng sau khi đăng ký thành công
       }, 2000);
     } catch (error) {

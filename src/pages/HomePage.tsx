@@ -1,14 +1,10 @@
-import React, { useState } from "react";
-import * as product from "../redux/api/axios";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
-import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
-import { CiHeart, CiStar } from "react-icons/ci";
+import { CiHeart } from "react-icons/ci";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { FaStar } from "react-icons/fa";
 import Header from "../components/Header/Header";
 import Footer from "../components/Layout/Footer";
-
+import * as product from "../redux/api/axios";
+import { useState } from "react";
 const PRODUCT_PER_PAGE = 8; // Số sản phẩm hiển thị trên mỗi trang
 
 interface Product {
@@ -57,24 +53,12 @@ function SupportSection () {
 }
 
 function HomePage() {
-  const [currentProduct, setCurrentProduct] = useState(1);
-
   const { data, isPending, error } = useQuery({
     queryKey: ["product"],
     queryFn: () => product.getProductList(),
-    
   });
 
-  console.log("Data:", data);
-  console.log("Data.data:", data?.data);
-
-  // Tính toán các sản phẩm cho trang hiện tại
-  const startIndex = (currentProduct - 1) * PRODUCT_PER_PAGE;
-  const endIndex = startIndex + PRODUCT_PER_PAGE;
-  const currentProductList = data?.data ? data.data.slice(startIndex, endIndex) : [];
-
-  console.log("currentProductList:", currentProductList);
-  const totalProduct = data?.data ? Math.ceil(data.data.length / PRODUCT_PER_PAGE) : 0;
+  const currentProductList = data?.data ? data.data.slice(0, PRODUCT_PER_PAGE) : [];
 
   const Skeleton = () => (
     <div className="animate-pulse">
@@ -90,7 +74,6 @@ function HomePage() {
 
   return (
     <div>
-      <Header /> {/* Header tràn lề */}
       <div className="max-w-screen-xl mx-auto py-6">
       <header className="mb-10">
         <div className="flex items-center">
@@ -118,7 +101,7 @@ function HomePage() {
               <div className="bg-gray-100 p-4 relative">
                 <div className="p-10 flex justify-center items-center">
                   <img
-                    src={product.image || "https://via.placeholder.com/150"}
+                    src={"https://via.placeholder.com/150"}
                     alt={product.name}
                     className="h-[180px] w-[115px] object-contain"
                   />
@@ -149,7 +132,6 @@ function HomePage() {
       </div>
       <SupportSection />
       </div>
-      <Footer /> {/* Footer tràn lề */}
     </div>
   );
 }

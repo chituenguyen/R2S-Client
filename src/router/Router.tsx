@@ -8,8 +8,6 @@ const RouterContent = () => {
 
 export const Router = () => {
   return (
-    <BrowserRouter>
       <RouterContent />
-    </BrowserRouter>
   );
 };

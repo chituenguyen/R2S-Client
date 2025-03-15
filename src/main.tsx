@@ -1,17 +1,24 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import { Provider } from 'react-redux'
-import { store } from './redux/store'
-import { Router } from './router/Router'
-import { Layout } from './components/Layout'
 import './App.css'
+import { Layout } from './components/Layout'
+import { Router } from './router/Router'
+import Header from './components/Header/Header'
+import Footer from './components/Layout/Footer'
+import { BrowserRouter } from 'react-router-dom'
+const queryClient = new QueryClient()
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <Provider store={store}>
+    <QueryClientProvider client={queryClient}>
       <Layout>
-        <Router />
+        <BrowserRouter>
+          <Header />
+          <Router />
+          <Footer />
+        </BrowserRouter>
       </Layout>
-    </Provider>
+    </QueryClientProvider>
   </React.StrictMode>
 )

@@ -19,11 +19,6 @@ export const routes: RouteObject[] = [
     element: <About />,
     children: []
   },
-  { 
-    path: '/home',
-    element: <HomePage/>,
-    children: []
-  },
   {
    path: '/postpage',
    element: <Postpage/>,

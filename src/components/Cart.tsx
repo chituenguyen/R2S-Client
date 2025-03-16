@@ -34,11 +34,11 @@ const Cart = () => {
   };
 
   return (
-    <div className="container mx-auto py-12 mt-20">
+    <div className="container mx-auto py-12 mt-24">
       <div className="flex items-center space-x-2 text-gray-500 text-[14px]">
         <a href="/" className="hover:underline">Home</a>
         <img src="/CrossLine.svg" alt="CrossLine" className="w-[7px]" />
-        <span className="font-medium text-black">Cart</span>
+        <span className="font-normal text-black">Cart</span>
       </div>
       <div>
       <div className="mt-10">

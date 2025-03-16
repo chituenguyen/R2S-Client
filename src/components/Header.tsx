@@ -2,8 +2,13 @@ import React, { useEffect, useState } from "react";
 
 const Header: React.FC = () => {
   const [cartCount, setCartCount] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    // Kiểm tra trạng thái đăng nhập
+    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+    setIsLoggedIn(loggedIn);
+    
     // Lấy giỏ hàng từ localStorage
     const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
     setCartCount(storedCart.length);
@@ -35,8 +40,15 @@ const Header: React.FC = () => {
           <a href="/" className="hover:border-b-2 hover:border-black">Home</a>
           <a href="#" className="hover:border-b-2 hover:border-black">Contact</a>
           <a href="#" className="hover:border-b-2 hover:border-black">About</a>
-          <a href="/signup" className="hover:border-b-2 hover:border-black">Sign Up</a>
+          {!isLoggedIn && (
+            <a href="/signup" className="hover:border-b-2 hover:border-black">Sign Up</a>
+          )}
+          {isLoggedIn && (
+            <a href="/profile" className="hover:border-b-2 hover:border-black">Account</a>
+          )}
         </div>
+
+        <div className="flex items-center space-x-12 mr-10">
 
         {/* Ô tìm kiếm */}
         <div className="flex items-center bg-gray-100 px-4 py-2 rounded-lg text-[12px] w-[243px] h-[38px]">
@@ -49,18 +61,25 @@ const Header: React.FC = () => {
             <img src="/SearchIcon.svg" alt="Search" className="w-4 h-4 cursor-pointer" />
         </div>
 
-
         {/* Biểu tượng giỏ hàng và yêu thích */}
         <div className="flex items-center space-x-4 relative">
-            <img src="/Wishlist.svg" alt="Favorite" className="w-8 h-8 cursor-pointer" tabIndex={0}/>
+            <img src="/Wishlist.svg" alt="Favorite" className="w-[32px] h-[32px] cursor-pointer" tabIndex={0}/>
             <a href="/cart" className="relative">
-              <img src="/Cart1.svg" alt="Cart" className="w-8 h-8 cursor-pointer" tabIndex={0} />
+              <img src="/Cart1.svg" alt="Cart" className="w-[32px] h-[32px] cursor-pointer" tabIndex={0} />
               {cartCount > 0 && (
               <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
                 {cartCount}
               </span>
               )}
             </a>
+            <a href={isLoggedIn ? "/profile" : "/login"} className="relative">
+              {isLoggedIn ? (
+                <img src="/userlogged.svg" alt="User Logged In" className="w-[32px] h-[32px] cursor-pointer" />
+              ) : (
+                <img src="/user.svg" alt="User" className="w-[32px] h-[32px] cursor-pointer" />
+              )}
+            </a>
+        </div>
         </div>
       </nav>
     </header>

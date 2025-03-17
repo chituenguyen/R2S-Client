@@ -4,6 +4,7 @@ import { MdOutlineRemoveRedEye } from "react-icons/md";
 import * as product from "../redux/api/axios";
 import { Product } from "../redux/types/user.types";
 import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
 const PRODUCT_PER_PAGE = 8;
 
@@ -43,6 +44,7 @@ function SupportSection() {
 
 function HomePage() {
   const { data, isPending, error } = useQuery({ queryKey: ["product"], queryFn: product.getProductList });
+  const navigate = useNavigate();
   const currentProductList = useMemo(() => (data ? data.slice(0, PRODUCT_PER_PAGE) : []), [data]);
 
   const handleAddToCart = (product: Product) => {
@@ -79,6 +81,7 @@ function HomePage() {
                 <div
                   key={product.id}
                   className="group bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 relative"
+                  onClick={() => navigate(`/detail/${product.id}`)}
                 >
                   <div className="bg-gray-100 p-4 relative">
                     <div className="p-10 flex justify-center items-center">
@@ -106,9 +109,11 @@ function HomePage() {
 
                   {product.stock > 0 ? (
                     <button
-                      className="absolute bottom-1/2 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-black text-white py-2 px-4 rounded-md text-center opacity-0 group-hover:opacity-100 transition-all duration-300"
-                      onClick={() => handleAddToCart(product)}
-                    >
+                    onClick={(e) => {
+                      e.stopPropagation(); // Ngăn việc click vào button làm navigate
+                      handleAddToCart(product);
+                    }}
+                    className="absolute bottom-1/2 left-0 w-full bg-black text-white py-3 text-center opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
                       Add To Cart
                     </button>
                   ) : (

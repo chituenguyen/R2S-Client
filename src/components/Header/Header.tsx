@@ -1,17 +1,28 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { FaRegHeart } from "react-icons/fa";
 import { FiShoppingCart } from "react-icons/fi";
 import { HiOutlineMenu, HiX } from "react-icons/hi"; // Hamburger Icon
 import Search from "../Layout/Search";
 
-function Header() {
+const Header: React.FC = () => {
+  const [cartCount, setCartCount] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [language, setLanguage] = useState(localStorage.getItem("language") || "English");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Đóng dropdown khi click bên ngoài
+  useEffect(() => {
+    // Kiểm tra trạng thái đăng nhập
+    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+    setIsLoggedIn(loggedIn);
+
+    // Lấy giỏ hàng từ localStorage
+    const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    setCartCount(storedCart.length);
+  }, []);
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -36,6 +47,7 @@ function Header() {
           Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!{" "}
           <span className="font-bold cursor-pointer ml-2">Shop Now</span>
         </div>
+
         {/* Language Dropdown */}
         <div className="absolute right-10" ref={dropdownRef}>
           <button
@@ -71,24 +83,37 @@ function Header() {
         </button>
 
         {/* Menu */}
-        <nav className={`absolute md:relative bg-white md:bg-transparent w-full md:w-auto md:flex space-x-8 text-black font-medium transition-all ${
-          menuOpen ? "top-16 left-0 shadow-md p-4 md:p-0 flex flex-col items-center" : "hidden md:flex"
-        }`}>
+        <nav className={`absolute md:relative bg-white md:bg-transparent w-full md:w-auto md:flex space-x-8 text-black font-medium transition-all ${menuOpen ? "top-16 left-0 shadow-md p-4 md:p-0 flex flex-col items-center" : "hidden md:flex"}`}>
           <Link to="/" className="hover:underline" onClick={() => setMenuOpen(false)}>Home</Link>
           <Link to="/contact" className="hover:underline" onClick={() => setMenuOpen(false)}>Contact</Link>
           <Link to="/about" className="hover:underline" onClick={() => setMenuOpen(false)}>About</Link>
-          <Link to="/signup" className="hover:underline" onClick={() => setMenuOpen(false)}>Sign Up</Link>
+          {!isLoggedIn && <Link to="/signup" className="hover:underline" onClick={() => setMenuOpen(false)}>Sign Up</Link>}
+          {isLoggedIn && <Link to="/profile" className="hover:underline" onClick={() => setMenuOpen(false)}>Account</Link>}
         </nav>
 
         {/* Search & Icons */}
         <div className="flex items-center space-x-6">
           <Search />
           <Link to="/wishlist"><FaRegHeart className="transition hover:scale-110" /></Link>
-          <Link to="/cart"><FiShoppingCart className="transition hover:scale-110" /></Link>
+          <Link to="/cart">
+            <FiShoppingCart className="transition hover:scale-110" />
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                {cartCount}
+              </span>
+            )}
+          </Link>
+          <Link to={isLoggedIn ? "/profile" : "/login"}>
+            {isLoggedIn ? (
+              <img src="/userlogged.svg" alt="User Logged In" className="w-[32px] h-[32px] cursor-pointer" />
+            ) : (
+              <img src="/user.svg" alt="User" className="w-[32px] h-[32px] cursor-pointer" />
+            )}
+          </Link>
         </div>
       </div>
     </header>
   );
-}
+};
 
 export default Header;

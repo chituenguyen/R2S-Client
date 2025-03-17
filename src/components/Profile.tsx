@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Profile: React.FC = () => {
   const [user, setUser] = useState<{
@@ -33,6 +34,60 @@ const Profile: React.FC = () => {
     window.scrollTo(0, 0);
   };
 
+  const handleUpdateProfile = async () => {
+    if (!user) {
+      toast.error("Profile data is missing!");
+      return;
+    }
+  
+    const { firstname, lastname, address } = user;
+  
+    // Kiểm tra nếu có trường nào rỗng
+    if (!firstname || !lastname || !address) {
+      toast.error("One or more fields are empty.");
+      return;
+    }
+  
+    console.log("Sending update request with data:", { firstname, lastname, address });
+  
+    try {
+      const response = await fetch("http://localhost:3000/api/auth/update-profile", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        body: JSON.stringify({ firstname, lastname, address }),
+      });
+  
+      if (!response.ok) {
+        toast.error("Update failed! Please try again.");
+      }
+  
+      toast.success("Profile updated successfully!");
+
+      // Lấy user hiện tại từ localStorage
+      const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+      
+      // Cập nhật chỉ các trường cần thay đổi
+      const updatedUser = {
+        ...storedUser, // Giữ nguyên các dữ liệu khác
+        firstname: firstname,
+        lastname: lastname,
+        address: address,
+      };
+      
+      // Lưu lại dữ liệu mới vào localStorage
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      // Cập nhật state
+      setUser(updatedUser);
+    } catch (error) {
+      console.error("Update failed:", error);
+    }
+  };
+  
+  
   return (
     <div className="container mx-auto py-12 mt-24">
     <div className="flex items-center space-x-2 text-gray-500 text-[14px]">
@@ -84,8 +139,8 @@ const Profile: React.FC = () => {
             <input
               type="text"
               value={user?.firstname || ""}
-              className="w-full p-2 border border-gray-300 rounded bg-gray-100 text-[16px]"
-              disabled
+              onChange={(e) => setUser((prev) => prev ? { ...prev, firstname: e.target.value } : null)}
+              className="w-full p-2 border border-gray-300 rounded bg-white text-[16px] text-gray-600"
             />
           </div>
 
@@ -95,14 +150,17 @@ const Profile: React.FC = () => {
             <input
               type="text"
               value={user?.lastname || ""}
-              className="w-full p-2 border border-gray-300 rounded bg-gray-100 text-[16px]"
-              disabled
+              onChange={(e) => setUser((prev) => prev ? { ...prev, lastname: e.target.value } : null)}
+              className="w-full p-2 border border-gray-300 rounded bg-white text-[16px] text-gray-600"
             />
           </div>
 
           {/* Email */}
           <div>
-            <label className="block text-[16px] mb-1">Email</label>
+            <label className="flex items-center text-[16px] mb-1">
+              Email
+              <img src="/lock.png" alt="Lock" className="w-4 h-4 ml-2 relative -translate-y-[2px]" />
+            </label>
             <input
               type="email"
               value={user?.email || ""}
@@ -112,13 +170,13 @@ const Profile: React.FC = () => {
           </div>
 
           {/* Address */}
-          <div>
+          <div className="col-span-2">
             <label className="block text-[16px] mb-1">Address</label>
             <input
               type="text"
               value={user?.address || ""}
-              className="w-full p-2 border border-gray-300 rounded bg-gray-100 text-[16px]"
-              disabled
+              onChange={(e) => setUser((prev) => prev ? { ...prev, address: e.target.value } : null)}
+              className="w-full p-2 border border-gray-300 rounded bg-white text-[16px] text-gray-600"
             />
           </div>
         </div>
@@ -129,26 +187,35 @@ const Profile: React.FC = () => {
           <input
             type="password"
             placeholder="Current Password"
-            className="w-full p-2 border border-gray-300 rounded bg-gray-100 text-[16px] placeholder:text-gray-600"
+            className="w-full p-2 border border-gray-300 rounded bg-white text-[16px] placeholder:text-gray-600"
           />
           <input
             type="password"
             placeholder="New Password"
-            className="w-full p-2 border border-gray-300 rounded bg-gray-100 text-[16px] placeholder:text-gray-600"
+            className="w-full p-2 border border-gray-300 rounded bg-white text-[16px] placeholder:text-gray-600"
           />
           <input
             type="password"
             placeholder="Confirm New Password"
-            className="w-full p-2 border border-gray-300 rounded bg-gray-100 text-[16px] placeholder:text-gray-600"
+            className="w-full p-2 border border-gray-300 rounded bg-white text-[16px] placeholder:text-gray-600"
           />
         </div>
 
         {/* Buttons */}
         <div className="flex justify-end mt-6 space-x-4">
-          <button className="px-4 py-2 text-black text-[16px]">
+          <button
+            onClick={() => {
+              const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+              if (storedUser) {
+                setUser(storedUser);
+              }
+            }}
+            className="px-4 py-2 text-black text-[16px]"
+          >
             Cancel
           </button>
-          <button className="px-6 py-2 bg-red-500 text-white rounded-lg text-[16px]">
+
+          <button onClick={handleUpdateProfile} className="px-6 py-2 bg-red-500 text-white rounded-lg text-[16px]">
             Save Changes
           </button>
         </div>

@@ -68,7 +68,7 @@ const LogIn = () => {
               placeholder="Email or Phone Number"
               value={formData.email}
               onChange={handleChange}
-              className="w-full mb-4 border-b border-gray-400 text-gray-500 text-[16px] outline-none"
+              className="w-full mb-4 border-b border-gray-400 text-gray-600 text-[16px] outline-none"
             />
 
             <div className="relative mb-4">
@@ -78,7 +78,7 @@ const LogIn = () => {
                 placeholder="Password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full mb-4 border-b border-gray-400 text-gray-500 text-[16px] outline-none"
+                className="w-full mb-4 border-b border-gray-400 text-gray-600 text-[16px] outline-none"
               />
               <button
                 type="button"

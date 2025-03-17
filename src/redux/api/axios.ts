@@ -1,23 +1,32 @@
 import axios from 'axios';
-// Nơi mà chúng ta định nghĩa rằng source gọi đến bao nhiêu service. 
-// const api = axios.create({
-//   baseURL: 'https://jsonplaceholder.typicode.com',
-//   headers: {
-//     'Content-Type': 'application/json',
-//   },
-// });
-export const getuser = async () => {
-  const res = await axios.get(
-    `http://localhost:3000/users`
-  );
-  return res.data;
+import { Product } from '../types/user.types';
+
+// Tạo instance của Axios với baseURL mặc định
+const api = axios.create({
+  baseURL: "http://localhost:3000/api",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Lấy danh sách tất cả sản phẩm
+export const getProductList = async (): Promise<Product[]> => {
+  const { data } = await api.get("/products");
+  return Array.isArray(data.data) ? data.data : [];
 };
 
-export const getProductList = async () => {
-  const res = await axios.get(`http://localhost:3000/api/products`);
-  return res.data;
+// Lấy sản phẩm theo ID
+export const getProductById = async (productId: number): Promise<Product | null> => {
+  try {
+    const { data } = await api.get(`/products/${productId}`);
+    if (!data.data) {
+      throw new Error("Product not found");
+    }
+    return Array.isArray(data.data) ? data.data[0] : data.data;
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    throw new Error("Failed to fetch product");
+  }
 };
 
-export const getProductById = async (productId: number) => {
-  return axios.get(`/products/${productId}`);
-};
+export default api;

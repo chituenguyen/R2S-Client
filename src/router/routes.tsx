@@ -5,18 +5,18 @@ import Postpage from '../pages/PostPage'
 import SignUp from '../pages/SignUp'
 import SignIn from '../pages/SignIn'
 import Contact from '../pages/Contact'
-import Cart from '../Cart/Cart'
+import Cart from '../pages/Cart'
 
 // import PostDetail from '../components/effect/postDetail'
 export const routes: RouteObject[] = [
   {
     path: '/',
-    element: <HomePage />,
+    element: <HomePage/>,
     children: []
   },
   {
     path: '/about',
-    element: <About />,
+    element: <About/>,
     children: []
   },
   {
@@ -37,6 +37,11 @@ export const routes: RouteObject[] = [
   {
     path: '/contact',
     element: <Contact/>,
+    children:[]
+  },
+  {
+    path: '/cart',
+    element: <Cart/>,
     children:[]
   },
 ]

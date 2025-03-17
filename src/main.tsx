@@ -1,24 +1,25 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import React from 'react'
-import { createRoot } from 'react-dom/client'
-import './App.css'
-import { Layout } from './components/Layout'
-import { Router } from './router/Router'
-import Header from './components/Header/Header'
-import Footer from './components/Layout/Footer'
-import { BrowserRouter } from 'react-router-dom'
-const queryClient = new QueryClient()
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React from "react";
+import { createRoot } from "react-dom/client";
+import "./App.css";
+import { Layout } from "./components/Layout";
+import { Router } from "./router/Router";
+import Header from "./components/Header/Header";
+import Footer from "./components/Layout/Footer";
+import { BrowserRouter } from "react-router-dom";
 
-createRoot(document.getElementById('root') as HTMLElement).render(
+const queryClient = new QueryClient();
+
+createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <Layout>
-        <BrowserRouter>
+      <BrowserRouter>
+        <Layout>
           <Header />
           <Router />
           <Footer />
-        </BrowserRouter>
-      </Layout>
+        </Layout>
+      </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>
-)
+);

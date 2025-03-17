@@ -1,12 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { FaRegHeart } from "react-icons/fa";
 import { FiShoppingCart } from "react-icons/fi";
+import { HiOutlineMenu, HiX } from "react-icons/hi"; // Hamburger Icon
 import Search from "../Layout/Search";
 
 function Header() {
-  const [language, setLanguage] = useState("English");
+  const [language, setLanguage] = useState(localStorage.getItem("language") || "English");
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Đóng dropdown khi click bên ngoài
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const changeLanguage = (lang: string) => {
+    setLanguage(lang);
+    localStorage.setItem("language", lang);
+    setDropdownOpen(false); // Đóng dropdown sau khi chọn
+  };
 
   return (
     <header className="w-full bg-white border-b border-gray-300">
@@ -17,7 +37,7 @@ function Header() {
           <span className="font-bold cursor-pointer ml-2">Shop Now</span>
         </div>
         {/* Language Dropdown */}
-        <div className="absolute right-10">
+        <div className="absolute right-10" ref={dropdownRef}>
           <button
             onClick={() => setDropdownOpen(!dropdownOpen)}
             className="flex items-center space-x-1"
@@ -27,16 +47,10 @@ function Header() {
           </button>
           {dropdownOpen && (
             <div className="absolute right-0 bg-black text-white shadow-md mt-2 rounded w-24 z-20">
-              <p
-                className="p-2 cursor-pointer hover:bg-gray-700"
-                onClick={() => setLanguage("English")}
-              >
+              <p className="p-2 cursor-pointer hover:bg-gray-700" onClick={() => changeLanguage("English")}>
                 English
               </p>
-              <p
-                className="p-2 cursor-pointer hover:bg-gray-700"
-                onClick={() => setLanguage("Vietnamese")}
-              >
+              <p className="p-2 cursor-pointer hover:bg-gray-700" onClick={() => changeLanguage("Vietnamese")}>
                 Vietnamese
               </p>
             </div>
@@ -51,14 +65,19 @@ function Header() {
           Exclusive
         </Link>
 
+        {/* Mobile Menu Toggle */}
+        <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
+          {menuOpen ? <HiX size={28} /> : <HiOutlineMenu size={28} />}
+        </button>
+
         {/* Menu */}
-        <nav>
-          <ul className="hidden md:flex space-x-8 text-black font-medium">
-            <li><Link to="/" className="hover:underline">Home</Link></li>
-            <li><Link to="/contact" className="hover:underline">Contact</Link></li>
-            <li><Link to="/about" className="hover:underline">About</Link></li>
-            <li><Link to="/signup" className="hover:underline">Sign Up</Link></li>
-          </ul>
+        <nav className={`absolute md:relative bg-white md:bg-transparent w-full md:w-auto md:flex space-x-8 text-black font-medium transition-all ${
+          menuOpen ? "top-16 left-0 shadow-md p-4 md:p-0 flex flex-col items-center" : "hidden md:flex"
+        }`}>
+          <Link to="/" className="hover:underline" onClick={() => setMenuOpen(false)}>Home</Link>
+          <Link to="/contact" className="hover:underline" onClick={() => setMenuOpen(false)}>Contact</Link>
+          <Link to="/about" className="hover:underline" onClick={() => setMenuOpen(false)}>About</Link>
+          <Link to="/signup" className="hover:underline" onClick={() => setMenuOpen(false)}>Sign Up</Link>
         </nav>
 
         {/* Search & Icons */}

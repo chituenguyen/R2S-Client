@@ -42,3 +42,38 @@ export interface Post {
   isPublic: number;
   market: string;      
 }
+
+export interface Product {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  images: string[]; 
+  category: string;
+  brand: string;
+  rate: number;
+  stock: number;
+  is_active: boolean;
+}
+
+// Định nghĩa kiểu dữ liệu cho sản phẩm trong giỏ hàng
+export interface CartItem {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  quantity: number;
+  color: string;
+  size: string | null;
+}
+
+export interface iProduct {
+  id: string;
+  title: string;
+  salePrice: number;
+  images?: { url: string; title?: string }[];
+}
+
+export interface iCartItem extends iProduct {
+  quantity: number;
+}

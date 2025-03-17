@@ -7,8 +7,6 @@ interface Product {
   price: number;
   description: string;
   image: string;
-  colors: string[];
-  sizes: string[];
   stock: number;
   rating: number;
   reviews: number;
@@ -18,13 +16,17 @@ const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
 
+  // TODO: Should use useQuery
   useEffect(() => {
-    fetch(`localhost:3000/api/products/${id}`)
+    fetch(`http://localhost:3003/api/products/${id}`)
       .then((res) => res.json())
-      .then((data) => setProduct(data))
+      .then((data) => {
+        setProduct(data.data[0])
+      })
       .catch((err) => console.error("Error fetching product:", err));
   }, [id]);
 
+  console.log(product)
   if (!product) {
     return <div className="text-center py-10">Loading...</div>;
   }
@@ -44,26 +46,26 @@ const ProductDetail = () => {
           
           <div className="mb-4">
             <span className="font-semibold">Colours:</span>
-            <div className="flex space-x-2 mt-2">
-              {product.colors.map((color) => (
+            {/* <div className="flex space-x-2 mt-2">
+              {product.colors?.map((color) => (
                 <div
                   key={color}
                   className="w-6 h-6 rounded-full border border-gray-300"
                   style={{ backgroundColor: color }}
                 ></div>
               ))}
-            </div>
+            </div> */}
           </div>
 
           <div className="mb-4">
             <span className="font-semibold">Size:</span>
-            <div className="flex space-x-2 mt-2">
-              {product.sizes.map((size) => (
+            {/* <div className="flex space-x-2 mt-2">
+              {product.sizes?.map((size) => (
                 <button key={size} className="px-3 py-1 border border-gray-400 rounded-md">
                   {size}
                 </button>
               ))}
-            </div>
+            </div> */}
           </div>
 
           <div className="flex items-center space-x-4 mt-4">

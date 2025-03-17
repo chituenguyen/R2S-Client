@@ -1,8 +1,7 @@
 import { FcGoogle } from "react-icons/fc";
-import Header from "../components/Header";
 import Footer from "../components/Footer";
+import Header from "../components/Header";
 import SignUpForm from "../components/Signup";
-import signupIllustration from "../../assets/images/signup-pic.png"; 
 
 export default function SignupPage() {
   return (

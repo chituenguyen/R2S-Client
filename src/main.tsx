@@ -1,20 +1,24 @@
-import React from "react"
-import { createRoot } from "react-dom/client"
-import { Router } from "./router/Router"
-import { Layout } from "./components/Layout"
-import "./App.css"
-import { QueryClientProvider } from "@tanstack/react-query"
-import { QueryClient } from "@tanstack/react-query"
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./App.css";
+import { BrowserRouter, Router, Route, Routes } from "react-router-dom";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import HomePage from "./pages/HomePage";
+import SignUpPage from "./pages/SignupPages";
+import ProductDetailPage from "./pages/ProductDetailPage";
 
-const queryClient = new QueryClient()
-createRoot(document.getElementById("root") as HTMLElement).render(
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <Layout>
-        <Router />
-      </Layout>
-    </QueryClientProvider>
+    <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/product/:id" element ={<ProductDetailPage />} />
+        </Routes>
+    </BrowserRouter>
   </React.StrictMode>
-)
+);
+
+

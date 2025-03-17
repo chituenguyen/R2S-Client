@@ -20,7 +20,7 @@ export const routes: RouteObject[] = [
     children: []
   },
   {
-   path: '/postpage',
+   path: '/postpage/:id',
    element: <Postpage/>,
    children:[]
   },

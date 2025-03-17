@@ -95,7 +95,7 @@ const ProductDetail = () => {
 
           {/* Colors */}
           <div className="my-4 flex items-center gap-4">
-            <h3 className="text-[20px] font-[Inter]">Colours:</h3>
+            <h3 className="text-[20px] font-[Inter]">Colors:</h3>
             <div className="flex gap-4">
               {colors.map(({ name, color }) => (
                 <div

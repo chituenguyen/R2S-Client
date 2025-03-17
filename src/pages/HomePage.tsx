@@ -81,7 +81,7 @@ function HomePage() {
                 <div
                   key={product.id}
                   className="group bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 relative"
-                  onClick={() => navigate(`/detail/${product.id}`)}
+                  onClick={() => navigate(`/products/${product.id}`)}
                 >
                   <div className="bg-gray-100 p-4 relative">
                     <div className="p-10 flex justify-center items-center">

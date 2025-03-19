@@ -1,7 +1,18 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
+import { FaUserCircle } from "react-icons/fa";
 
 function Search() {
+  const [user, setUser] = useState<{ email: string} | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
+
   return (
     <div className="flex items-center space-x-4 mr-20">
       <div className="relative hidden md:block">
@@ -15,24 +26,47 @@ function Search() {
         </span>
       </div>
       <Link>❤️</Link>
-      <Link>🛒</Link>
+      <Link to="/cart">🛒</Link>
+      {user ? (
+        <div className="hidden items-center space-x-3 md:flex lg:flex">
+          <FaUserCircle className="w-8 h-8 text-gray-700" />
+          <span>👋 {user.email}</span>
+          <div className="absolute right-24">
+            <button onClick={()=>setDropdownOpen(!dropdownOpen)} className="relative">
+            <span>▼</span>
+            </button>
+            {dropdownOpen && (
+                <ul className="absolute top-8 right-1 bg-white shadow-md rounded w-44 z-20 p-2 space-y-2">
+                  <li className="hover:text-red-400"><Link>Manage My Account</Link></li>
+                  <li className="hover:text-red-400"><Link>My Order</Link></li>
+                  <li className="hover:text-red-400"><Link>My Cancellations</Link></li>
+                  <li className="hover:text-red-400"><Link>My Reviews</Link></li>
+                  <li className="hover:text-red-400"><Link>Logout</Link></li>
+                </ul>
+            )}
+          </div>
+        </div>
+        ) : (
+          <Link to="/login" className="text-blue-500 hover:underline">Đăng nhập</Link>
+        )}
+      
     </div>
   )
 }
 
 function Menu() {
   return (
-    <ul className="hidden md:flex space-x-6 text-gray-600 font-medium">
+    <ul className="hidden md:flex space-x-10 text-gray-600 font-medium">
       <li className=" border-black">
         <Link to="/">Home</Link>
       </li>
-      <li className="cursor-pointer">
+      <li className="">
         <Link to="/contact">Contact</Link>
       </li>
-      <li className="cursor-pointer">
+      <li className="">
         <Link to="/about">About</Link>
       </li>
-      <li className="cursor-pointer">
+      <li className="">
         <Link to="/signin">Sign in</Link>
       </li>
     </ul>
@@ -81,7 +115,7 @@ const Header = () => {
         {/* Navbar */}
         <nav className="flex justify-between items-center px-8 py-4 shadow-md bg-white">
           {/* Logo */}
-          <h1 className="text-2xl font-bold ml-16">Exclusive</h1>
+          <Link to="/" className="text-2xl font-bold ml-16">Exclusive</Link>
 
           {/* Menu */}
           <Menu />

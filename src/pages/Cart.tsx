@@ -2,16 +2,17 @@ import { ReactElement } from "react"
 import Table from "../components/table/Table"
 import Header from "../components/header/header"
 import Footer from "../components/footer/Footer"
-import LoginPage from "../components/aut/Login"
+import CartPage from "../components/homepage/CartPage"
 
-function Login(): ReactElement {
+
+function Cart(): ReactElement {
   return (
     <div className="">
 
-      <LoginPage />
+      <CartPage />
 
     </div>
   )
 }
 
-export default Login
+export default Cart

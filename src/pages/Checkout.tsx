@@ -1,14 +1,14 @@
 import { ReactElement } from "react"
 import Table from "../components/table/Table"
 import SigninPage from "../components/aut/Signin"
+import CheckOutPage from "../components/homepage/CheckoutPage"
 
-
-function Signin(): ReactElement {
+function Checkout(): ReactElement {
   return (
     <div className="">
-      <SigninPage />
+        <CheckOutPage/>
     </div>
   )
 }
 
-export default Signin
+export default Checkout

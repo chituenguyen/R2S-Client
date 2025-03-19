@@ -7,9 +7,9 @@ import ProductPage from "../components/homepage/HomePage"
 function Home(): ReactElement {
   return (
     <div className="">
-      <Header />
+
       <ProductPage />
-      <Footer />
+
     </div>
   )
 }

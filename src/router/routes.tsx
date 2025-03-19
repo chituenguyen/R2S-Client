@@ -4,6 +4,9 @@ import About from "../pages/About"
 import Contact from "../pages/Contact"
 import Signin from "../pages/Signin"
 import Login from "../pages/Login"
+import ProductDetail from "../pages/ProductDetail"
+import Cart from "../pages/Cart"
+import Checkout from "../pages/Checkout"
 
 export const routes: RouteObject[] = [
   {
@@ -29,6 +32,21 @@ export const routes: RouteObject[] = [
   {
     path: "/login",
     element: <Login />,
+    children: []
+  },
+  {
+    path:"/productdetail/:id",
+    element: <ProductDetail />,
+    children: []
+  },
+  {
+    path:"/cart",
+    element: <Cart/>,
+    children: []
+  },
+  {
+    path:'/checkout',
+    element: <Checkout />,
     children: []
   }
 ]

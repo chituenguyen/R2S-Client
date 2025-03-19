@@ -7,8 +7,7 @@ import Footer from "../components/footer/Footer"
 function About(): ReactElement {
   return (
     <div className="">
-      <Header />
-      <Footer />
+
     </div>
   )
 }

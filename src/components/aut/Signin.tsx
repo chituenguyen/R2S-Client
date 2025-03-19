@@ -3,22 +3,37 @@ import { useForm, SubmitHandler } from "react-hook-form"
 import Signin from './../../pages/Signin';
 import { FaGoogle } from "react-icons/fa";
 import { Link } from "react-router-dom";
-
-type Inputs = {
-    email: string
-    password: string
-}
-
+import { useNavigate } from "react-router-dom";
+import { RegisterCredentials } from "../../useQuery/user/auth";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { registerUser } from "../../useQuery/api/api";
 
 const SigninPage = () => {
+    const navigate = useNavigate()
 
-    const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
+    const { register, handleSubmit, formState: { errors } } = useForm<RegisterCredentials>();
 
-    const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
+    const mutation = useMutation({
+      mutationFn: registerUser,
+      onSuccess: (data) => {
+        toast("Dang ky thanh cong", {position: "top-right"});
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
+      },
+      onError: (error: any) => {
+        toast("Tài khoản đã tồn tại", {position: "top-right"})
+      },
+    });
+    
+
+    const onSubmit = (data: RegisterCredentials) => {
+      mutation.mutate(data)
+    }
 
     return (
       <div className="flex h-screen justify-center">
-        {/* Hình ảnh bên trái */}
         <div className="hidden md:flex items-center">
           <img
             src="images/a1c7dc5b68a42239311e510f54d8cd59.jpg"
@@ -27,7 +42,6 @@ const SigninPage = () => {
           />
         </div>
         
-        {/* Form đăng nhập bên phải */}
         <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-8">
         <h2 className="text-3xl font-semibold mb-4">Create an account</h2>
         <p className="text-gray-600 mb-6">Enter your details below</p>
@@ -79,7 +93,7 @@ const SigninPage = () => {
           )}
           <div className="flex flex-col justify-center space-x-40 w-96">
             <button type="submit" className="bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600">
-              Create Account
+              {mutation.isLoading ? "Signup...": "Creating Account"}
             </button>
           </div>
           <Link className="flex text-black border px-6 py-2 rounded-md hover:bg-red-600 space-x-5 w-96 justify-center mt-5">

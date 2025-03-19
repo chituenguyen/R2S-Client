@@ -1,17 +1,34 @@
 import { useState } from "react"
 import { useForm, SubmitHandler } from "react-hook-form"
-
-type Inputs = {
-    email: string
-    password: string
-}
-
+import { loginUser } from "../../useQuery/api/api";
+import { LoginResponse } from "../../useQuery/user/auth";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
+    const navigate = useNavigate()
+    const { register, handleSubmit, formState: { errors } } = useForm<LoginResponse>();
 
-    const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
+    const mutation = useMutation({
+      mutationFn: loginUser,
+      onSuccess: (data) => {
+        localStorage.setItem("access_token", data.tokens?.accessToken);
+        localStorage.setItem("refresh_token", data.tokens?.refreshToken)
+        localStorage.setItem("user", JSON.stringify(data.user));
+        toast("Đăng nhập thành công", {position: "top-right"});
+        setTimeout(() => {
+          navigate('/');
+        }, 1000);
+      },
+      onError: (errors: any) => {
+        toast("Sai tài khoản hoặc mật khẩu", {position: "top-right"})
+      }
+    })
 
-    const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
+    const onSubmit = (data: LoginResponse) => {
+      mutation.mutate(data)
+    }
 
     return (
       <div className="flex h-screen justify-center">
@@ -69,7 +86,7 @@ const LoginPage = () => {
           )}
           <div className="flex justify-center space-x-40 w-full">
             <button type="submit" className="bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600">
-              Log In
+              {mutation.isLoading ? "Logging in...." : "Login"}
             </button>
             <a href="#" className="text-red-500 hover:underline">Forgot Password?</a>
           </div>

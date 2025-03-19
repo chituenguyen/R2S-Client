@@ -6,8 +6,7 @@ import Footer from "../components/footer/Footer"
 function Contact(): ReactElement {
   return (
     <div className="">
-      <Header />
-      <Footer />
+
     </div>
   )
 }

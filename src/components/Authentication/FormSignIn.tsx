@@ -51,7 +51,7 @@ const SignIn = () => {
       {/* Hình ảnh bên trái */}
       <div className="hidden md:flex items-center w-1/2">
         <img
-          src="/src/images/shoppingcard.jpg"
+          src="/assets/images/shoppingcard.jpg"
           alt="Shopping"
           className="w-full h-full object-cover"
         />

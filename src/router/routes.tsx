@@ -7,6 +7,7 @@ import SignIn from '../pages/SignIn'
 import Contact from '../pages/Contact'
 import Cart from '../pages/Cart'
 import Profile from '../pages/Profile'
+import CheckOut from '../pages/CheckOut'
 
 // import PostDetail from '../components/effect/postDetail'
 export const routes: RouteObject[] = [
@@ -48,6 +49,11 @@ export const routes: RouteObject[] = [
   {
     path: '/profile',
     element: <Profile/>,
+    children:[]
+  },
+  {
+    path: '/checkout',
+    element: <CheckOut/>,
     children:[]
   },
 ]

@@ -5,23 +5,25 @@ import * as product from "../redux/api/axios";
 import { Product } from "../redux/types/user.types";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const PRODUCT_PER_PAGE = 8;
 
 function SupportSection() {
   const services = [
     {
-      src: "src/images/fast-delivery-icon-free-vector.jpg",
+      src: "assets/images/fast-delivery-icon-free-vector.jpg",
       title: "FREE AND FAST DELIVERY",
       description: "Free delivery for all orders over $140",
     },
     {
-      src: "src/images/customer service.png",
+      src: "assets/images/customer service.png",
       title: "24/7 CUSTOMER SERVICE",
       description: "Friendly 24/7 customer support",
     },
     {
-      src: "src/images/png-clipart-money-back-guarantee-computer-icons-search-button-miscellaneous-service.png",
+      src: "assets/images/png-clipart-money-back-guarantee-computer-icons-search-button-miscellaneous-service.png",
       title: "MONEY BACK GUARANTEE",
       description: "We return money within 30 days",
     },
@@ -48,8 +50,23 @@ function HomePage() {
   const currentProductList = useMemo(() => (data ? data.slice(0, PRODUCT_PER_PAGE) : []), [data]);
 
   const handleAddToCart = (product: Product) => {
-    console.log(`Thêm sản phẩm vào giỏ hàng: ${product.name}`);
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+    const existingProduct = cart.find((item: Product) => item.id === product.id);
+
+    if (existingProduct) {
+      existingProduct.quantity += 1;
+    } else {
+      cart.push({ ...product, quantity: 1 });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    toast.success("Added to cart successfully!");
   };
+
+  if (error) {
+    return <p className="text-red-500 text-center">Failed to load products. Please try again later.</p>;
+  }
 
   const Skeleton = () => (
     <div className="animate-pulse grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

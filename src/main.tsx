@@ -7,6 +7,7 @@ import { Router } from "./router/Router";
 import Header from "./components/Header/Header";
 import Footer from "./components/Layout/Footer";
 import { BrowserRouter } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 const queryClient = new QueryClient();
 
@@ -15,6 +16,7 @@ createRoot(document.getElementById("root") as HTMLElement).render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Layout>
+        <ToastContainer />
           <Header />
           <Router />
           <Footer />

@@ -1,34 +1,58 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
    // State để lưu trữ danh sách sản phẩm trong giỏ hàng
   const [cart, setCart] = useState<any[]>([]);
-  
-  // Lấy giỏ hàng từ localStorage khi component mount
-  useEffect(() => {
+  const navigate = useNavigate();
+
+  const handleCheckout = () => {
+    navigate("/checkout"); // Chuyển hướng đến trang CheckOut
+  };
+  // Hàm lấy giỏ hàng từ localStorage
+  const getCartFromLocalStorage = () => {
     const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
     setCart(storedCart);
+  };
+
+  // Lấy giỏ hàng từ localStorage khi component mount
+  useEffect(() => {
+    getCartFromLocalStorage();
   }, []);
   
-  // Cập nhật localStorage mỗi khi giỏ hàng thay đổi
+  // Cập nhật giỏ hàng khi localStorage thay đổi từ các trang khác
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
+    const handleStorageChange = () => {
+      getCartFromLocalStorage();
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
+  // Cập nhật localStorage khi giỏ hàng thay đổi
+  useEffect(() => {
+    if (cart.length > 0) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
   }, [cart]);
-  
-  
+  // Xóa sản phẩm khỏi giỏ hàng
   const handleRemoveItem = (id: number) => {
     const updatedCart = cart.filter((item) => item.id !== id);
     setCart(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật localStorage ngay lập tức
   };
 
+  // Thay đổi số lượng sản phẩm
   const handleQuantityChange = (id: number, type: "increase" | "decrease") => {
-    setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.id === id
-          ? { ...item, quantity: Math.max(1, item.quantity + (type === "increase" ? 1 : -1)) }
-          : item
-      )
+    const updatedCart = cart.map((item) =>
+      item.id === id
+        ? { ...item, quantity: Math.max(1, item.quantity + (type === "increase" ? 1 : -1)) }
+        : item
     );
+    setCart(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart)); // Cập nhật localStorage ngay lập tức
   };
 
   return (
@@ -113,7 +137,7 @@ const Cart = () => {
             <span>Total:</span>
             <span>${cart.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}</span>
           </div>
-          <button className="w-full mt-4 bg-red-500 text-white py-3 rounded">
+          <button className="w-full mt-4 bg-red-500 text-white py-3 rounded" onClick={handleCheckout}>
             Proceed to checkout
           </button>
         </div>

@@ -66,14 +66,3 @@ export interface CartItem {
   color: string;
   size: string | null;
 }
-
-export interface iProduct {
-  id: string;
-  title: string;
-  salePrice: number;
-  images?: { url: string; title?: string }[];
-}
-
-export interface iCartItem extends iProduct {
-  quantity: number;
-}

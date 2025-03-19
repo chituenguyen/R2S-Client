@@ -45,7 +45,7 @@ const RelatedItem = ({ currentProductId }: RelatedProductProps) => {
           <div
             key={product.id}
             className="group rounded-lg bg-white transition duration-300 w-[270px]"
-            onClick={() => navigate(`/detail/${product.id}`)}
+            onClick={() => navigate(`/postpage/${product.id}`)}
           >
             <div className="w-[270px] h-[250px] bg-[#F5F5F5] flex flex-col items-center overflow-hidden rounded-md relative">
               <div className="flex-grow flex items-center justify-center">

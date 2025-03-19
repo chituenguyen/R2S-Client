@@ -19,25 +19,22 @@ const Profile: React.FC = () => {
     if (storedUser) {
       setUser(storedUser);
     } else {
-      navigate("/login"); // Redirect if not logged in
+      navigate("/signin"); // Redirect if not logged in
     }
   }, [navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("user"); // Remove user data
-    
-    navigate("/login");
-    window.location.reload();
-    window.scrollTo(0, 0);
+  const handleSignOut = () => {
+    localStorage.clear();
+    setUser(null);
+    navigate("/signin");
   };
+  
 
   return (
     <div className="container mx-auto py-12 mt-24">
     <div className="flex items-center space-x-2 text-gray-500 text-[14px]">
       <a href="/" className="hover:underline">Home</a>
-      <img src="/CrossLine.svg" alt="CrossLine" className="w-[7px]" />
+      /
       <span className="font-normal text-black">My Account</span>
     </div>
     <div className="flex min-h-screen mt-10">
@@ -66,10 +63,10 @@ const Profile: React.FC = () => {
 
         <h2 className="text-[16px] font-medium mt-6 mb-4">My Wishlist</h2>
         <button
-          onClick={handleLogout}
+          onClick={handleSignOut}
           className="mt-4 bg-red-500 text-[16px] text-white py-2 px-4 rounded-lg hover:bg-red-600"
         >
-          Logout
+          SignOut
         </button>
       </aside>
 

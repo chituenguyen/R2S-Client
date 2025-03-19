@@ -60,13 +60,13 @@ const Footer = () => {
             <h3 className="text-lg font-semibold">Download App</h3>
             <p className="mt-3 text-sm">Save $3 with App New User Only</p>
             <div className="flex items-center space-x-1">
-              <img src="src/images/qrcode.jpg" alt="QR Code" className="h-20 w-20 object-cover rounded-lg shadow-lg" />
+              <img src="assets/images/qrcode.jpg" alt="QR Code" className="h-20 w-20 object-cover rounded-lg shadow-lg" />
               <div className="flex flex-col space-y-3">
               <Link to="/download/googleplay">
-                <img src="src/images/googleplay.png" alt="Google Play" className="h-14 md:h-16 object-contain" />
+                <img src="assets/images/googleplay.png" alt="Google Play" className="h-14 md:h-16 object-contain" />
                </Link>
                <Link to="/download/appstore">
-                <img src="src/images/appstore.png" alt="App Store" className="h-14 md:h-16 object-contain" />
+                <img src="assets/images/appstore.png" alt="App Store" className="h-14 md:h-16 object-contain" />
                </Link>
                </div>
             </div>

@@ -1,5 +1,6 @@
 import React from "react";
-import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaPaperPlane } from "react-icons/fa";
+import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from "react-icons/fa";
+import { PaperAirplaneIcon } from "@heroicons/react/24/solid"; // Import Heroicons
 
 const Footer: React.FC = () => {
   return (
@@ -13,9 +14,9 @@ const Footer: React.FC = () => {
             <input
               type="email"
               placeholder="Enter your email"
-              className="w-full p-2 pr-10 rounded-md text-black"
+              className="w-full p-2 pr-12 rounded-md bg-black text-white border border-white placeholder-gray-400"
             />
-            <FaPaperPlane className="absolute right-3 top-3 text-gray-600 cursor-pointer" />
+            <PaperAirplaneIcon className="absolute right-3 top-3 w-5 h-5 text-white cursor-pointer" />
           </div>
         </div>
 

@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 import ProductCard from "../components/Product";
 
 interface Product {
@@ -33,8 +31,6 @@ function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
-
       <main className="flex-1 container mx-auto px-4 py-10">
         <div className="mb-8">
           <h2 className="text-5xl text-gray-1000">Explore Our Products</h2>
@@ -63,31 +59,37 @@ function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 text-center">
-          <div className="flex flex-col items-center p-6">
-            <div className="w-16 h-16 flex items-center justify-center bg-black rounded-full mb-4">
-              <img src="/icons/delivery.png" alt="Fast Delivery" className="w-8 h-8 invert" />
+         <div className="flex flex-col items-center p-6">
+          <div className="w-24 h-24 flex items-center justify-center bg-gray-300 rounded-full">
+            <div className="w-20 h-20 flex items-center justify-center bg-black rounded-full">
+              <img src="/assets/Icon/free-delivery.png" alt="Fast Delivery" className="w-10 h-10 invert" />
             </div>
-            <h3 className="text-lg font-semibold">FREE AND FAST DELIVERY</h3>
+          </div>
+            <h3 className="text-lg font-semibold mt-4">FREE AND FAST DELIVERY</h3>
             <p className="text-gray-600">Free delivery for all orders over $140</p>
           </div>
-          <div className="flex flex-col items-center p-6">
-            <div className="w-16 h-16 flex items-center justify-center bg-black rounded-full mb-4">
-              <img src="/icons/customer-service.png" alt="Customer Service" className="w-8 h-8 invert" />
+
+        <div className="flex flex-col items-center p-6">
+          <div className="w-24 h-24 flex items-center justify-center bg-gray-300 rounded-full">
+            <div className="w-20 h-20 flex items-center justify-center bg-black rounded-full">
+              <img src="/assets/Icon/customer-service.png" alt="Customer Service" className="w-10 h-10 invert" />
             </div>
-            <h3 className="text-lg font-semibold">24/7 CUSTOMER SERVICE</h3>
+          </div>
+            <h3 className="text-lg font-semibold mt-4">24/7 CUSTOMER SERVICE</h3>
             <p className="text-gray-600">Friendly 24/7 customer support</p>
           </div>
-          <div className="flex flex-col items-center p-6">
-            <div className="w-16 h-16 flex items-center justify-center bg-black rounded-full mb-4">
-              <img src="/icons/money-back.png" alt="Money Back" className="w-8 h-8 invert" />
+
+        <div className="flex flex-col items-center p-6">
+          <div className="w-24 h-24 flex items-center justify-center bg-gray-300 rounded-full">
+            <div className="w-20 h-20 flex items-center justify-center bg-black rounded-full">
+              <img src="/assets/Icon/money-back.png" alt="Money Back" className="w-10 h-10 invert" />
             </div>
-            <h3 className="text-lg font-semibold">MONEY BACK GUARANTEE</h3>
+          </div>
+            <h3 className="text-lg font-semibold mt-4">MONEY BACK GUARANTEE</h3>
             <p className="text-gray-600">We return money within 30 days</p>
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }

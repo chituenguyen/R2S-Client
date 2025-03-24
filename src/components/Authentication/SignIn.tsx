@@ -1,82 +1,70 @@
 import { useMutation } from "@tanstack/react-query";
-import React, { useEffect, useState } from 'react';
 import * as user from "../../api/user";
-import LoginData from "../../redux/type";
+import {LoginData} from "../../redux/type";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "../context/ToastContext";
+import { useForm } from 'react-hook-form';
+import { useEffect } from "react";
+
 
 
 function SignIn() {
-  
-  const [identifier, setIdentifier] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const { toast } = useToast();
   const navigate = useNavigate();
-
-
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm<LoginData>();
 
   const mutation = useMutation({
-    
-      mutationKey: ['mutation'],
-      mutationFn: (data: LoginData) => user.SignInUser(data),
-      onSuccess: (data) => {
-        // Xử lý thành công (ví dụ: lưu token, chuyển hướng)
-        console.log('Login successful', data);
-      },
-      onError: (error) => {
-        // Xử lý lỗi (ví dụ: hiển thị thông báo lỗi)
-        console.error('Login failed', error);
+    mutationKey: ['login'],
+    mutationFn: (data: LoginData) => user.SignInUser(data),
+    onSuccess: (data) => {
+      toast("Đăng nhập thành công")
+
     },
-  })
-  const  { data, isSuccess, isPending } = mutation;
-  useEffect(() =>{
-    if (isSuccess) {
-      localStorage.setItem("access_token", JSON.stringify(data?.tokens.accessToken));
-      localStorage.setItem("refresh_token", JSON.stringify(data?.tokens.refreshToken));
-      console.log("accessToken",data?.tokens.accessToken);
-      console.log("refreshToken",data?.tokens.refreshToken);
-      navigate("/");
-
-    }
-  })
-
-  console.log(identifier,password)
-  
-
-  const handleIdentifierChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIdentifier(e.target.value);
-  };
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
-  
-
-
-  const handleLogin = (e: React.FormEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    // Kiểm tra thông tin đăng nhập
-    if (!identifier.trim() || !password.trim()) {
-        setError('Vui lòng nhập email/số điện thoại và mật khẩu.');
-        return;
-    }
-
-    // Kiểm tra định dạng (ví dụ: email)
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Ví dụ regex email
-    if (identifier.includes('@') && !emailRegex.test(identifier)) {
-        setError('Email không đúng định dạng.');
-        return;
-    }
-
-    // Gọi mutation nếu không có lỗi
-    mutation.mutate({ identifier, password }, {
-        onError: (err: any) => {
-            setError(err?.response?.data?.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập.');
-        }
+    onError: (err: any) => {
+      const errorMessage = 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập.';
+      toast(errorMessage); // Hiển thị toast lỗi
+     
+      setError('email', {
+        type: 'manual',
+        message: errorMessage,
       });
-    };
+      setError('password', {
+        type: 'manual',
+        message: errorMessage,
+      });
+      
+    },
+  });
+  console.log("mutation",mutation)
 
-    console.log("mution:",mutation.data)
+  const { isSuccess, isPending, data } = mutation;
+  
+  
+
+  const onSubmit = (data: LoginData) => {
+    mutation.mutate(data);
+  };
+
+
+  useEffect(() => {
+    if (isSuccess) {
+      localStorage.setItem("access_token", JSON.stringify(data.tokens.accessToken));
+      localStorage.setItem("refresh_token", JSON.stringify(data.tokens.refreshToken));
+      localStorage.setItem("user", JSON.stringify(data.user));
+      console.log(data);
+      
+        // Chuyển hướng sau khi refetch thành công
+        navigate('/');
+
+    }
+  }, [isSuccess, data]);
+
+
 
   return (
     <div className="flex h-screen">
@@ -90,29 +78,26 @@ function SignIn() {
       <div className="w-1/3 bg-white flex flex-col justify-center p-20">
         <div className="text-2xl font-bold mb-2">Log in to Exclusive</div>
         <div className="text-sm text-gray-600 mb-6">Enter your details below</div>
+        <form onSubmit={handleSubmit(onSubmit)}>
         <input
           type="text"
-          id="identifier"
-          name='identifier'
           placeholder="Email or Phone Number"
-          onChange={handleIdentifierChange}
           className="border-b border-gray-300 rounded-md p-2 mb-4 w-full"
+          {...register('email', { required: true })}
         />
         <input
           type="password"
-          id='password'
-          name='password'
           placeholder="Password"
-          onChange={handlePasswordChange}
           className="border-b border-gray-300 rounded-md p-2 mb-6 w-full"
+          {...register('password', { required: true })}
         />
         <div className="flex justify-between w-full">
-          <button type='submit'
+          <button type="submit" disabled={isPending}
                className="bg-red-500 text-white rounded-md px-9 py-2" 
-               onClick={handleLogin}
                >Log In</button>
           <div className="text-red-500 text-sm flex items-center">Forget Password?</div>
         </div>
+        </form>
       </div>
     </div>
   );

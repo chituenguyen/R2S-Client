@@ -1,10 +1,11 @@
 import { RouteObject } from 'react-router-dom'
 import HomePage from '../pages/HomePage'
-import Postpage from '../pages/PostPage'
 import SignUp from '../components/Authentication/SignUp'
 import SignIn from '../components/Authentication/SignIn'
-import ProductDetail from '../components/Detail/Productdetail'
-
+import ProductDetail from '../pages/Productdetail'
+import OrderPage from '../pages/OrderPage'
+import Checkout from '../pages/Checkout'
+import MyProfile from '../pages/Dashboard/MyProfile'
 // import PostDetail from '../components/effect/postDetail'
 
 
@@ -13,11 +14,6 @@ export const routes: RouteObject[] = [
     path: '/',
     element: <HomePage/>,
     children: []
-  },
-  {
-   path: '/postpage',
-   element: <Postpage/>,
-   children:[]
   },
   {
     path: '/signup',
@@ -34,7 +30,21 @@ export const routes: RouteObject[] = [
     element: <ProductDetail/>,
     children:[]
   },
+  {
+    path: '/orders',
+    element: <OrderPage/>,
+    children:[]
+  },
+  {
+    path: '/checkout',
+    element: <Checkout/>,
+    children:[]
+  },
+  {
+    path: '/my-profile',
+    element: <MyProfile/>,
+    children:[]
+  },
 
 
- 
 ]

@@ -5,7 +5,7 @@ import { CiHeart, CiStar } from "react-icons/ci";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import * as product from "../../api/product"
 import { useState } from "react";
-import Product from "../../redux/type";
+import { Product } from "../../redux/type";
 
 
 
@@ -14,7 +14,7 @@ function ProductList({ PRODUCT_PER_PAGE }: { PRODUCT_PER_PAGE: number }) {
     queryKey: ["product"],
     queryFn: () => product.getProductList(),
   });
-  console.log("Data:", data);
+  // console.log("Data:", data);
   // console.log("Data.data:", data.data);
   const [currentProduct, setCurrentProduct] = useState(1);
 
@@ -23,7 +23,7 @@ function ProductList({ PRODUCT_PER_PAGE }: { PRODUCT_PER_PAGE: number }) {
   const endIndex = startIndex + PRODUCT_PER_PAGE;
   const currentProductList = data ? data.data.slice(startIndex, endIndex) : [];
 
-  console.log("currentProductList:", currentProductList);
+  // console.log("currentProductList:", currentProductList);
   const totalProduct = data ? Math.ceil(data.length / PRODUCT_PER_PAGE) : 0;
   const slug = 0;
 

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import * as product from "../api/product";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
 import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 import ProductSkeleton from "../components/Skeleton/ProductSkeleton";
 import { TbTruckDelivery } from "react-icons/tb";
@@ -10,25 +9,14 @@ import { IoShieldCheckmarkOutline } from "react-icons/io5";
 import ProductList from "../components/List/ProductList";
 
 let PRODUCT_PER_PAGE = 8; // Số sản phẩm hiển thị trên mỗi trang
-interface Product {
-  id: number;
-  name: string;
-  price: string;
-  description: string;
-  images: string[];
-  category: string;
-  brand: string;
-  rate: number;
-  stock: number;
-  is_active: boolean;
-};
 
 function HomePage() {
+
   const { data, isPending, error } = useQuery({
     queryKey: ["product"],
     queryFn: () => product.getProductList(),
   });
-  console.log("Data:", data);
+  // console.log("Data:", data);
   // console.log("Data.data:", data.data);
   const [currentProduct, setCurrentProduct] = useState(1);
 
@@ -37,7 +25,7 @@ function HomePage() {
   const endIndex = startIndex + PRODUCT_PER_PAGE;
   const currentProductList = data ? data.data.slice(startIndex, endIndex) : [];
 
-  console.log("currentProductList:", currentProductList);
+  // console.log("currentProductList:", currentProductList);
   const totalProduct = data ? Math.ceil(data.length / PRODUCT_PER_PAGE) : 0;
   const slug = 0;
 

@@ -2,13 +2,13 @@ import axios from "axios";
 
 
 export const getProductList = async () => {
-    const res = await axios.get(`https://uritrainer.ddns.net/api/products`);
+    const res = await axios.get(`${process.env.DOMAIN_API}/products`);
     return res.data;
   };
 
   export const getProductDetail = async (id: number) => {
     try {
-      const res = await axios.get(`http://localhost:3000/api/products/${id}`);
+      const res = await axios.get(`${process.env.DOMAIN_API}/products/${id}`);
       // console.log("API Response:", res.data); // In phản hồi API
       return res.data;
     } catch (error) {
@@ -19,7 +19,7 @@ export const getProductList = async () => {
 
   export const pushOrder = async (data: any) => {
     try {
-      const res = await axios.post(`http://localhost:3000/api/orders`, data, {
+      const res = await axios.post(`${process.env.DOMAIN_API}/orders`, data, {
         headers: {
           "Content-Type": "application/json",
         },

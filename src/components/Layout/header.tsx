@@ -70,7 +70,7 @@ function Header() {
   //   }
   //   }, [cartItems]);
   const cartData = JSON.parse(localStorage.getItem('cart') || '[]');
-  setCartItemCount(cartData.length);
+  // setCartItemCount(cartData.length);
 
  
 

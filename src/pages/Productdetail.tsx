@@ -10,7 +10,8 @@ import ProductList from "../components/List/ProductList"
 import { useEffect } from "react";
 import { Product } from "../redux/type";
 import ProductSkeleton from "../components/Skeleton/ProductSkeleton";
-import { useToast } from 'd:/New folder/R2S-Client/src/components/context/ToastContext';
+import { useToast } from "../components/context/ToastContext";
+// import { useToast } from 'd:/New folder/R2S-Client/src/components/context/ToastContext';
 
 
 let PRODUCT_PER_PAGE = 4; //Số sản phẩm hiển thị

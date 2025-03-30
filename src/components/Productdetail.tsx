@@ -4,190 +4,134 @@ import ps2 from "../../assets/ps5_2.jpg"
 import ps3 from "../../assets/ps5_3.jpg"
 import ps4 from "../../assets/ps5_4.jpg"
 import ps5 from "../../assets/ps5_5.jpg"
+import detail3 from "../../assets/detail3.jpg"
 import ship from "../../assets/ship1.jpg"
 import refesh from "../../assets/refesh.jpg"
 import heart from "../../assets/heart.png"
 import visible from "../../assets/visible.png"
-import product1 from "../../assets/detail1.jpg"
-import product2 from "../../assets/detail2.jpg"
-import product3 from "../../assets/detail3.jpg"
-import product4 from "../../assets/detail4.jpg"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
+import { useProducts } from "../redux/slices/productSlice"
+import Navbarpage from "../pages/Navbarpage"
 
-const products = [
-  {
-    id: 1,
-    name: "HAVIT HV-G92 Gamepad",
-    price: "99.99$",
-    image: product1,
-    heartIcon: heart,
-    eyeIcon: visible,
-    stock: 15,
-    vote: "★★★★☆"
-  },
-  {
-    id: 2,
-    name: "AK-900 Wired Keyboard",
-    price: "89.99$",
-    image: product2,
-    heartIcon: heart,
-    eyeIcon: visible,
-    stock: 22,
-    vote: "★★★★★"
-  },
-  {
-    id: 3,
-    name: "IPS LCD Gaming Monitor",
-    price: "79.99$",
-    image: product3,
-    heartIcon: heart,
-    eyeIcon: visible,
-    stock: 30,
-    vote: "★★★★☆"
-  },
-  {
-    id: 4,
-    name: "RGB liquid CPU Cooler",
-    price: "109.99$",
-    image: product4,
-    heartIcon: heart,
-    eyeIcon: visible,
-    stock: 10,
-    vote: "★★★★★"
-  }
-]
+
 
 const ProductDetail = () => {
   const [selectedSize, setSelectedSize] = useState("")
   const [quantity, setQuantity] = useState(1)
+  const handleBuyNow = () => {
+    if (!product) {
+      alert("Product not available");
+      return;
+    }
+  
+    const orderData = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      size: selectedSize,
+      quantity: quantity,
+      totalPrice: product.price * quantity,
+    };
+  
+    // Lưu đơn hàng vào localStorage
+    let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+    orders.push(orderData);
+    localStorage.setItem("orders", JSON.stringify(orders));
+  
+    // Chuyển hướng tới trang giỏ hàng hoặc thông báo
+    alert("Product added to cart!");
+  };
+  // Lấy id từ URL
+  const { id } = useParams()
+  console.log(id)
+  
+  const { data, isLoading, error } = useProducts()
+  if (isLoading)
+    return <div className="text-center py-10">Loading products...</div>
+  if (error)
+    return (
+      <div className="text-center py-10 text-red-500">
+        Error loading products: {error.message}
+      </div>
+    )
+  if (!data?.data?.length) {
+    return <div className="text-center py-10">No products available</div>
+  }
+  const sortedData = data.data.slice(0, 4).sort((a, b) => a.id - b.id);
+
+  // Tìm sản phẩm theo id từ data
+  const product = data.data.find((item) => item.id.toString() === id)
+  if (!product) {
+    return <div className="text-center py-10">Product not found</div>
+  }
 
   const increaseQuantity = () => setQuantity(quantity + 1)
   const decreaseQuantity = () => setQuantity(quantity > 1 ? quantity - 1 : 1)
+  console.log(product)
 
   return (
-    <div className="w-full mx-auto">
-      {/* Navbar */}
-      <nav className="max-w-[1440px] w-full mx-auto bg-white py-4 px-6 flex justify-between items-center text-sm mt-10">
-        <div className="text-2xl font-bold tracking-wider font-inter">
-          Exclusive
-        </div>
-        <ul className="flex gap-12">
-          <Link to="/">
-            <li className="cursor-pointer text-[16px] text-[#000000] font-poppins tracking-normal text-center">
-              Home
-            </li>
-          </Link>
+    <div className="w-full mx-auto mt-10">
+      <Link to="/home">
+        <Navbarpage />
+      </Link>
 
-          <li className="cursor-pointer text-[16px] text-[#000000] font-poppins tracking-normal text-center">
-            Contact
-          </li>
-          <li className="cursor-pointer text-[16px] text-[#000000] font-poppins tracking-normal text-center">
-            About
-          </li>
-          <li className="cursor-pointer text-[16px] text-[#000000] font-poppins tracking-normal text-center">
-            <Link to="/sign-up">Sign Up</Link>
-          </li>
-        </ul>
-        <div className="flex items-center space-x-4">
-          {/* Search Bar */}
-          <div className="bg-[#F5F5F5] h-[38px] w-[243px] px-3 py-2 flex items-center space-x-2">
-            <input
-              type="text"
-              placeholder="What are you looking for?"
-              className="bg-gray-100 outline-none text-sm w-48"
-            />
-            <svg
-              className="w-[24px] h-[24px] cursor-pointer text-[#000000]"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-          </div>
-          {/* Icons */}
-          <svg
-            className="w-5 h-5 cursor-pointer text-[#000000]"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.68l-1.06-1.07a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z" />
-          </svg>
-          <svg
-            className="w-5 h-5 cursor-pointer text-[#000000]"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <circle cx="9" cy="21" r="1" />
-            <circle cx="20" cy="21" r="1" />
-            <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9a2 2 0 0 0 2-1.61L23 6H6" />
-          </svg>
-        </div>
-      </nav>
       {/* Thanh phân cách */}
       <div className="w-full h-[1px] mt-5 border-t border-gray-300 opacity-30 mx-auto"></div>
-
+       
       <div className="flex gap-20 justify-center mt-24">
-        <div className="h-[600px]">
-          <div className="w-[170px] h-[138px]  rounded-sm bg-[#F5F5F5]">
-            <img
-              className="w-[121px] h-[114px] object-cover mx-auto"
-              src={ps1}
+        <div className="h-[600px]">          
+            <div className="w-[170px] h-[138px]  rounded-sm bg-[#F5F5F5]">
+              <img
+                className="w-[121px] h-[114px] object-cover mx-auto"
+              src={product.images?.[0] || ps1}
               alt=""
             />
           </div>
           <div className="w-[170px] h-[138px]  rounded-sm my-4 bg-[#F5F5F5]">
             <img
               className="w-[112px] h-[97px] object-cover  mx-auto"
-              src={ps2}
+              src={product.images?.[0] || ps2}
               alt=""
             />
           </div>
           <div className="w-[170px] h-[138px] rounded-sm my-4 bg-[#F5F5F5]">
             <img
               className="w-[134px] h-[94px] object-cover mx-auto"
-              src={ps3}
+              src={product.images?.[0] || ps3}
               alt=""
             />
           </div>
           <div className="w-[170px] h-[138px]  rounded-sm bg-[#F5F5F5]">
             <img
               className="w-[122px] h-[106px] object-cover mx-auto"
-              src={ps4}
+              src={product.images?.[0] || ps4}
               alt=""
             />
           </div>
         </div>
 
+
         <div className="w-[500px] h-[600px] rounded-lg bg-[#F5F5F5]">
           <div className="mt-20">
             <img
               className="w-[446px] h-[315px] object-cover mx-auto"
-              src={ps5}
+              src={product.images?.[0] || ps5}
               alt=""
             />
           </div>
         </div>
         <div>
           <div className="h-[600px] space-y-6">
+            
             <h1 className="text-[24px] leading-[24px] text-bold font-poppins">
-              Havic HV G-92 Gamepad
+              {product.name}
             </h1>
             <div className="flex items-center gap-2">
               <div className="text-yellow-400 text-2xl rounded-[1.4px] mt-[-9px]">
                 ★★★★☆
               </div>
               <p className="text-black-400 text-[14px] leading-[21px] font-poppins opacity-50 my-auto">
-                (150 Reviews)
+                ({product.stock} Reviews)
               </p>
               <p className="border-1 opacity-[50%] mt-[-10px] ">|</p>
               <p className="text-400 text-[#00FF66] text-[14px] leading-[21px] font-poppins opacity-60">
@@ -195,13 +139,14 @@ const ProductDetail = () => {
               </p>
             </div>
             <h2 className="text-[24px] leading-[24px] text-bold font-poppins">
-              $192.00
+              {product.price}$
             </h2>
             <p className="w-[373px] text-[14px] text-black-400 leading-[21px] font-poppins">
-              PlayStation 5 Controller Skin High quality vinyl with air channel
-              adhesive for easy bubble free install & mess free removal Pressure
-              sensitive.
+              {product.description}
             </p>
+
+
+            
             <div className="w-[400px] h-[1px] bg-[#000000] border-[1px]"></div>
             <div className="flex items-center gap-2">
               <h3 className="text-[20px] leading-[20px] text-sm font-poppins">
@@ -292,7 +237,7 @@ const ProductDetail = () => {
               </div>
 
               {/* Buy Now Button */}
-              <button className="px-6 py-2 w-[165px] h-[44px] bg-red-500 text-white font-poppins rounded-md hover:bg-red-600 transition-colors">
+              <button className="px-6 py-2 w-[165px] h-[44px] bg-red-500 text-white font-poppins rounded-md hover:bg-red-600 transition-colors" onClick={handleBuyNow}>
                 Buy Now
               </button>
 
@@ -358,7 +303,7 @@ const ProductDetail = () => {
         </div>
         {/* Product Section */}
         <div className="max-w-[1440px] w-full h-[732px] mx-auto mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map((product) => (
+        {sortedData.map((product) => (
             <div
               key={product.id}
               className="w-[270px] h-[322px] gap-16 mx-auto"
@@ -367,7 +312,7 @@ const ProductDetail = () => {
                 <div className="w-[190px] h-[180px] mt-[35px] ml-[40px]">
                   <img
                     className="w-[120px] h-[180px] mx-auto cursor-pointer"
-                    src={product.image}
+                    src={product.images?.[0] || detail3}
                     alt="Product"
                   />
                 </div>
@@ -403,7 +348,7 @@ const ProductDetail = () => {
                   </p>
                   <div className="items-center">
                     <span className="text-yellow-500 text-2xl rounded-[1.4px]">
-                      {product.vote}
+                        ★★★★☆
                     </span>
                     <span className="text-gray-500 mx-2 items-center">
                       {" "}

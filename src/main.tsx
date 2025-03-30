@@ -6,8 +6,7 @@ import "./App.css"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { QueryClient } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
-import  { Header ,Footer } from "./pages/Headerpage"
-// import ProductDetail from './components/Productdetail';
+import  { Header ,Footer} from "./pages/Headerpage"
 
 const queryClient = new QueryClient()
 createRoot(document.getElementById("root") as HTMLElement).render(
@@ -17,7 +16,6 @@ createRoot(document.getElementById("root") as HTMLElement).render(
       <Header />
       <Layout>
         <Router />
-        {/* <ProductDetail /> */}
       </Layout>
       <Footer />
     </QueryClientProvider>

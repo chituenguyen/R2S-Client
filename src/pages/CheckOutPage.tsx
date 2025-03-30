@@ -1,13 +1,9 @@
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import ship1 from "../../assets/product1.jpg";
-import Navbarpage from "./Navbarpage";
-import pay1 from "../../assets/pay1.jpg";
-import pay2 from "../../assets/pay2.jpg";
-import pay3 from "../../assets/pay3.jpg";
-import pay4 from "../../assets/pay4.jpg";
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ShoppingBag, CreditCard, Truck, CheckCircle } from 'lucide-react';
 
-// Khai báo kiểu cho OrderItem
+type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered';
+
 interface OrderItem {
   id: number;
   name: string;
@@ -17,337 +13,429 @@ interface OrderItem {
   image?: string;
 }
 
+interface CustomerInfo {
+  firstName: string;
+  companyName?: string;
+  streetAddress: string;
+  apartment?: string;
+  townCity: string;
+  phoneNumber: string;
+  email: string;
+  saveInfo: boolean;
+  paymentMethod: string;
+  orderTotal: number;
+  discount: number;
+  items: OrderItem[];
+}
+
+interface OrderResponse {
+  id: string;
+  status: OrderStatus;
+}
+
 function CheckoutPage() {
   const [orders, setOrders] = useState<OrderItem[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState(0);
+  const [orderStatus, setOrderStatus] = useState<OrderStatus>('pending');
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [orderId, setOrderId] = useState<string | null>(null);
 
-  // Lấy dữ liệu giỏ hàng từ localStorage khi component được render
   useEffect(() => {
     const storedOrders: OrderItem[] = JSON.parse(localStorage.getItem("orders") || "[]");
-    
-    // Tính lại totalPrice cho mỗi sản phẩm để đảm bảo chính xác
     const updatedOrders = storedOrders.map(item => ({
       ...item,
       totalPrice: item.price * item.quantity
     }));
     
     setOrders(updatedOrders);
-    
-    // Tính tổng giá trị giỏ hàng
-    const calculatedTotal = updatedOrders.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    const calculatedTotal = updatedOrders.reduce((acc, item) => acc + item.totalPrice, 0);
     setTotalPrice(calculatedTotal);
   }, []);
 
-  // // Xử lý áp dụng mã giảm giá
-  // const applyCoupon = () => {
-  //   // Đây chỉ là ví dụ logic giảm giá, bạn có thể thay đổi theo nhu cầu thực tế
-  //   if (couponCode === "DISCOUNT10") {
-  //     const discountAmount = totalPrice * 0.1; // Giảm 10%
-  //     setDiscount(discountAmount);
-  //   } else if (couponCode === "DISCOUNT20") {
-  //     const discountAmount = totalPrice * 0.2; // Giảm 20%
-  //     setDiscount(discountAmount);
-  //   } else {
-  //     alert("Invalid coupon code");
-  //     setDiscount(0);
-  //   }
-  // };
+  // Poll order status
+  useEffect(() => {
+    if (!orderId) return;
 
-  // Xử lý khi submit form thanh toán
-  const handleSubmit = (e: React.FormEvent) => {
+    const pollStatus = async () => {
+      try {
+        const response = await fetch(`https://devapi.uniscore.vn/uri/api/orders/${orderId}`);
+        if (!response.ok) throw new Error('Failed to fetch order status');
+        
+        const data: OrderResponse = await response.json();
+        setOrderStatus(data.status);
+
+        // Stop polling if order is delivered
+        if (data.status === 'delivered') return;
+
+        // Continue polling every 2 seconds
+        setTimeout(pollStatus, 2000);
+      } catch (error) {
+        console.error('Error polling order status:', error);
+      }
+    };
+
+    pollStatus();
+  }, [orderId]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isProcessing) return;
 
-    // Lấy dữ liệu từ form
+    setIsProcessing(true);
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
 
-    const customerInfo = {
-      firstName: formData.get("first-name"),
-      companyName: formData.get("company-name"),
-      streetAddress: formData.get("street-address"),
-      apartment: formData.get("apartment"),
-      townCity: formData.get("town-city"),
-      phoneNumber: formData.get("phone-number"),
-      email: formData.get("email-address"),
-      saveInfo: formData.get("save-info"),
-      paymentMethod: formData.get("payment"),
+    const customerInfo: CustomerInfo = {
+      firstName: formData.get("first-name") as string,
+      companyName: formData.get("company-name") as string,
+      streetAddress: formData.get("street-address") as string,
+      apartment: formData.get("apartment") as string,
+      townCity: formData.get("town-city") as string,
+      phoneNumber: formData.get("phone-number") as string,
+      email: formData.get("email-address") as string,
+      saveInfo: formData.get("save-info") === "on",
+      paymentMethod: formData.get("payment") as string,
       orderTotal: totalPrice - discount,
       discount: discount,
       items: orders
     };
 
-    // Lưu thông tin khách hàng vào localStorage (hoặc backend nếu cần)
-    localStorage.setItem("customerInfo", JSON.stringify(customerInfo));
+    try {
+      const response = await fetch('https://devapi.uniscore.vn/uri/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customerInfo,
+          items: orders,
+          totalAmount: totalPrice - discount,
+          status: 'pending'
+        }),
+      });
 
-    // Bạn có thể gửi đơn hàng đến backend tại đây (nếu cần)
-    alert("Order placed successfully!");
-  };
+      if (!response.ok) {
+        throw new Error('Failed to create order');
+      }
 
-  // Xử lý đặt hàng
-  const handlePlaceOrder = () => {
-    // Kiểm tra xem đã nhập đủ thông tin chưa
-    const customerInfo = localStorage.getItem("customerInfo");
-    if (!customerInfo) {
-      alert("Please fill in your billing details before placing the order");
-      return;
+      const orderData: OrderResponse = await response.json();
+      setOrderId(orderData.id);
+  
+      const orderInfo = {
+        ...customerInfo,
+        orderId: orderData.id,
+        orderStatus: 'pending',
+        createdAt: new Date().toISOString(),
+      };
+      localStorage.setItem('order_' + orderData.id, JSON.stringify(orderInfo));
+  
+      localStorage.removeItem("orders");
+      setOrders([]);
+      setTotalPrice(0);
+  
+    } catch (error) {
+      console.error('Order processing failed:', error);
+      alert('There was an error processing your order. Please try again.');
+    } finally {
+      setIsProcessing(false);
     }
-
-    // Có thể thêm logic đặt hàng ở đây
-    alert("Order placed successfully!");
-    
-    // Xóa giỏ hàng sau khi đặt hàng thành công
-    localStorage.removeItem("orders");
-    setOrders([]);
-    setTotalPrice(0);
+  
   };
-  return (
-    <div className="w-full mx-auto mt-10">
-      <Link to="/home">
-        <Navbarpage />
-      </Link>
-      {/* Thanh phân cách */}
-      <div className="w-full h-[1px] mt-5 border-t border-gray-300 opacity-30 mx-auto"></div>
 
-      <div className="max-w-full mx-auto p-6 bg-white flex justify-between mt-20">
-        <div className="w-[470px] h-[814px]">
-          <h2 className="text-[36px] leading-[30px] font-poppins mb-10">
-            Billing Details
-          </h2>
-          <form onSubmit={handleSubmit}>
-            {/* First Name */}
-            <div className="mb-6">
-              <label
-                htmlFor="first-name"
-                className="block text-sm font-semibold mb-2"
-              >
-                First Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="first-name"
-                id="first-name"
-                placeholder="Enter your first name"
-                className="w-full p-3 border border-gray-300 rounded-md"
-              />
-            </div>
+  const OrderStatusIndicator = () => {
+    const statuses = [
+      { status: 'pending', icon: ShoppingBag, label: 'Order Placed' },
+      { status: 'processing', icon: CreditCard, label: 'Processing Payment' },
+      { status: 'shipped', icon: Truck, label: 'Shipped' },
+      { status: 'delivered', icon: CheckCircle, label: 'Delivered' }
+    ];
 
-            {/* Company Name */}
-            <div className="mb-6">
-              <label
-                htmlFor="company-name"
-                className="block text-sm font-semibold mb-2"
-              >
-                Company Name
-              </label>
-              <input
-                type="text"
-                name="company-name"
-                id="company-name"
-                placeholder="Enter your company name"
-                className="w-full p-3 border border-gray-300 rounded-md"
-              />
-            </div>
+    const getStatusIndex = (status: OrderStatus) => {
+      return statuses.findIndex(s => s.status === status);
+    };
 
-            {/* Street Address */}
-            <div className="mb-6">
-              <label
-                htmlFor="street-address"
-                className="block text-sm font-semibold mb-2"
-              >
-                Street Address <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="street-address"
-                id="street-address"
-                placeholder="Enter your street address"
-                className="w-full p-3 border border-gray-300 rounded-md"
-              />
-            </div>
+    const currentIndex = getStatusIndex(orderStatus);
 
-            {/* Apartment, floor, etc. */}
-            <div className="mb-6">
-              <label
-                htmlFor="apartment"
-                className="block text-sm font-semibold mb-2"
-              >
-                Apartment, floor, etc. (optional)
-              </label>
-              <input
-                type="text"
-                name="apartment"
-                id="apartment"
-                placeholder="Apartment, floor, etc."
-                className="w-full p-3 border border-gray-300 rounded-md"
-              />
-            </div>
-
-            {/* Town/City */}
-            <div className="mb-6">
-              <label
-                htmlFor="town-city"
-                className="block text-sm font-semibold mb-2"
-              >
-                Town/City <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="town-city"
-                id="town-city"
-                placeholder="Enter your town/city"
-                className="w-full p-3 border border-gray-300 rounded-md"
-              />
-            </div>
-
-            {/* Phone Number */}
-            <div className="mb-6">
-              <label
-                htmlFor="phone-number"
-                className="block text-sm font-semibold mb-2"
-              >
-                Phone Number <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="phone-number"
-                id="phone-number"
-                placeholder="Enter your phone number"
-                className="w-full p-3 border border-gray-300 rounded-md"
-              />
-            </div>
-
-            {/* Email Address */}
-            <div className="mb-6">
-              <label
-                htmlFor="email-address"
-                className="block text-sm font-semibold mb-2"
-              >
-                Email Address <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="email"
-                name="email-address"
-                id="email-address"
-                placeholder="Enter your email address"
-                className="w-full p-3 border border-gray-300 rounded-md"
-              />
-            </div>
-
-            {/* Save Information Checkbox */}
-            <div className="flex items-center mb-4">
-              <input
-                type="checkbox"
-                name="save-info"
-                id="save-info"
-                className="w-4 h-4 mr-2 border-gray-300 rounded"
-              />
-              <label htmlFor="save-info" className="text-sm text-gray-700">
-                Save this information for faster check-out next time
-              </label>
-            </div>
-
-            {/* Submit Button */}
-            <div className="mb-4">
-              <button
-                type="submit"
-                className="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600"
-              >
-                Submit
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <div className="w-[525px] h-[600px] mt-10">
-          <div className="max-w-4xl mx-auto p-6 bg-white ">
-            {/* Cart Items */}
-            <div className="mb-6">
-              {orders.map((item: OrderItem) => (
-                <div key={item.id} className="flex justify-between items-center py-3">
-                  <div className="flex items-center">
-                    <img
-                      src={item.image || ship1}
-                      alt={item.name}
-                      className="w-9 h-9 object-cover mr-4"
-                    />
-                    <span>{item.name}</span>
-                  </div>
-                  <span>{item.totalPrice}$</span>
+    return (
+      <div className="w-full mb-8">
+        <div className="flex justify-between items-center relative">
+          {statuses.map((status, index) => {
+            const Icon = status.icon;
+            const isActive = index <= currentIndex;
+            
+            return (
+              <div key={status.status} className="flex flex-col items-center z-10">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                  isActive ? 'bg-green-500' : 'bg-gray-300'
+                }`}>
+                  <Icon className="w-6 h-6 text-white" />
                 </div>
-              ))}
-            </div>
-
-            {/* Cart Total */}
-            <div className="bg-white rounded-lg  border-gray-300">
-              <h3 className="text-xl font-semibold mb-4">Cart Total</h3>
-              <div className="mb-4">
-                <div className="flex justify-between mb-2">
-                  <span>Subtotal:</span>
-                  <span>{totalPrice}$</span>
-                </div>
-                <hr className="border-t border-gray-300 my-4" />
-                <div className="flex justify-between mb-2">
-                  <span>Shipping:</span>
-                  <span>Free</span>
-                </div>
-                <hr className="border-t border-gray-300 my-4" />
-                <div className="flex justify-between mb-4 font-semibold">
-                  <span>Total:</span>
-                  <span>{totalPrice}$</span>
-                </div>
+                <span className={`mt-2 text-sm ${
+                  isActive ? 'text-green-500 font-medium' : 'text-gray-500'
+                }`}>
+                  {status.label}
+                </span>
               </div>
-            </div>
-
-            {/* Payment Methods */}
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2">Payment Method</h3>
-              <div className="flex justify-between items-center">
-                <div className="items-center mb-4">
-                  <input type="radio" id="bank" name="payment" className="mr-2" />
-                  <label htmlFor="bank" className="text-sm">
-                    Bank
-                  </label>
-                </div>
-
-                <div className="flex space-x-2 mb-4 cursor-pointer">
-                  <img src={pay1} alt="Visa" className="w-10 h-6" />
-                  <img src={pay2} alt="MasterCard" className="w-10 h-6" />
-                  <img src={pay3} alt="Paypal" className="w-10 h-6" />
-                  <img src={pay4} alt="Paypal" className="w-10 h-6" />
-                </div>
-              </div>
-              <div className="flex items-center mb-4">
-                <input type="radio" id="cash" name="payment" className="mr-2" />
-                <label htmlFor="cash" className="text-sm">
-                  Cash on delivery
-                </label>
-              </div>
-            </div>
-
-            {/* Coupon Code */}
-            <div className="mb-6">
-              <div className="flex items-center">
-                <input
-                  type="text"
-                  placeholder="Coupon Code"
-                  className="w-64 p-3 border border-gray-300 rounded-l-md"
-                />
-                <button className="bg-red-500 text-white py-3 px-6 rounded-r-md hover:bg-red-600">
-                  Apply Coupon
-                </button>
-              </div>
-            </div>
-
-            {/* Place Order Button */}
-            <div className="flex justify-between items-center">
-              <button className="w-full bg-red-500 text-white py-3 rounded-md hover:bg-red-600">
-                Place Order
-              </button>
-            </div>
+            );
+          })}
+          
+          <div className="absolute top-5 left-0 h-1 bg-gray-200 w-full -z-10">
+            <div 
+              className="h-full bg-green-500 transition-all duration-500"
+              style={{ width: `${(currentIndex / (statuses.length - 1)) * 100}%` }}
+            />
           </div>
         </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="w-full mx-auto mt-10">
+      <Link to="/home" className="block mb-5">
+        <h1 className="text-2xl font-bold text-center">Checkout</h1>
+      </Link>
+      
+      <div className="max-w-7xl mx-auto px-4">
+        <OrderStatusIndicator />
+        
+        {orderStatus === 'delivered' ? (
+          <div className="text-center py-10">
+            <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold mb-2">Order Completed!</h2>
+            <p className="text-gray-600 mb-6">Thank you for your purchase.</p>
+            <Link 
+              to="/home" 
+              className="inline-block bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600"
+            >
+              Continue Shopping
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Billing Details Form */}
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h2 className="text-2xl font-bold mb-6">Billing Details</h2>
+              <form onSubmit={handleSubmit}>
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
+                      First Name
+                    </label>
+                    <input
+                      type="text"
+                      name="first-name"
+                      id="first-name"
+                      required
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="company-name" className="block text-sm font-medium text-gray-700">
+                      Company Name (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      name="company-name"
+                      id="company-name"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="street-address" className="block text-sm font-medium text-gray-700">
+                      Street Address
+                    </label>
+                    <input
+                      type="text"
+                      name="street-address"
+                      id="street-address"
+                      required
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="apartment" className="block text-sm font-medium text-gray-700">
+                      Apartment, suite, etc. (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      name="apartment"
+                      id="apartment"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="town-city" className="block text-sm font-medium text-gray-700">
+                      Town/City
+                    </label>
+                    <input
+                      type="text"
+                      name="town-city"
+                      id="town-city"
+                      required
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="phone-number" className="block text-sm font-medium text-gray-700">
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      name="phone-number"
+                      id="phone-number"
+                      required
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="email-address" className="block text-sm font-medium text-gray-700">
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      name="email-address"
+                      id="email-address"
+                      required
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    />
+                  </div>
+                  
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="save-info"
+                      id="save-info"
+                      className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
+                    <label htmlFor="save-info" className="ml-2 block text-sm text-gray-900">
+                      Save this information for next time
+                    </label>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Payment Method
+                    </label>
+                    <div className="space-y-2">
+                      <div className="flex items-center">
+                        <input
+                          type="radio"
+                          name="payment"
+                          value="credit-card"
+                          id="credit-card"
+                          required
+                          className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                        />
+                        <label htmlFor="credit-card" className="ml-2 block text-sm text-gray-900">
+                          Credit Card
+                        </label>
+                      </div>
+                      <div className="flex items-center">
+                        <input
+                          type="radio"
+                          name="payment"
+                          value="paypal"
+                          id="paypal"
+                          required
+                          className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                        />
+                        <label htmlFor="paypal" className="ml-2 block text-sm text-gray-900">
+                          PayPal
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <button
+                  type="submit"
+                  disabled={isProcessing || orders.length === 0}
+                  className={`mt-6 w-full py-3 rounded-md ${
+                    isProcessing || orders.length === 0
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-blue-500 hover:bg-blue-600'
+                  } text-white`}
+                >
+                  {isProcessing ? 'Processing...' : 'Place Order'}
+                </button>
+              </form>
+            </div>
+
+            {/* Order Summary */}
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h2 className="text-2xl font-bold mb-6">Order Summary</h2>
+              <div className="space-y-4">
+                {orders.map((item) => (
+                  <div key={item.id} className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      {item.image && (
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-16 h-16 object-cover rounded-md mr-4"
+                        />
+                      )}
+                      <div>
+                        <h3 className="font-medium">{item.name}</h3>
+                        <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
+                      </div>
+                    </div>
+                    <p className="font-medium">${item.totalPrice.toFixed(2)}</p>
+                  </div>
+                ))}
+                
+                <div className="border-t pt-4">
+                  <div className="flex justify-between mb-2">
+                    <span>Subtotal</span>
+                    <span>${totalPrice.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between mb-2">
+                    <span>Discount</span>
+                    <span>-${discount.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between font-bold">
+                    <span>Total</span>
+                    <span>${(totalPrice - discount).toFixed(2)}</span>
+                  </div>
+                </div>
+                
+                <div className="mt-4">
+                  <label htmlFor="coupon" className="block text-sm font-medium text-gray-700 mb-2">
+                    Have a coupon code?
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      id="coupon"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      placeholder="Enter code"
+                    />
+                    <button
+                      type="button"
+                      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+                      onClick={() => {
+                        console.log('Applying coupon:', couponCode);
+                      }}
+                    >
+                      Apply
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

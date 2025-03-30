@@ -1616,6 +1616,11 @@ cliui@^7.0.2:
     strip-ansi "^6.0.0"
     wrap-ansi "^7.0.0"
 
+clsx@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/clsx/-/clsx-2.1.1.tgz#eed397c9fd8bd882bfb18deab7102049a2f32999"
+  integrity sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==
+
 color-convert@^1.9.0:
   version "1.9.3"
   resolved "https://registry.npmjs.org/color-convert/-/color-convert-1.9.3.tgz"
@@ -3272,6 +3277,11 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
+lucide-react@^0.483.0:
+  version "0.483.0"
+  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-0.483.0.tgz#036c538173a8c310ac6b7d6af150543e5ecdf116"
+  integrity sha512-WldsY17Qb/T3VZdMnVQ9C3DDIP7h1ViDTHVdVGnLZcvHNg30zH/MTQ04RTORjexoGmpsXroiQXZ4QyR0kBy0FA==
+
 magic-string@^0.27.0:
   version "0.27.0"
   resolved "https://registry.npmjs.org/magic-string/-/magic-string-0.27.0.tgz"
@@ -3881,6 +3891,13 @@ react-router@6.11.2:
   integrity sha512-74z9xUSaSX07t3LM+pS6Un0T55ibUE/79CzfZpy5wsPDZaea1F8QkrsiyRnA2YQ7LwE/umaydzXZV80iDCPkMg==
   dependencies:
     "@remix-run/router" "1.6.2"
+
+react-toastify@^11.0.5:
+  version "11.0.5"
+  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-11.0.5.tgz#ce4c42d10eeb433988ab2264d3e445c4e9d13313"
+  integrity sha512-EpqHBGvnSTtHYhCPLxML05NLY2ZX0JURbAdNYa6BUkk+amz4wbKBQvoKQAB0ardvSarUBuY4Q4s1sluAzZwkmA==
+  dependencies:
+    clsx "^2.1.1"
 
 react@^18.2.0:
   version "18.2.0"

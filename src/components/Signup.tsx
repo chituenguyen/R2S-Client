@@ -1,96 +1,71 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { FcGoogle } from "react-icons/fc";
-import { signUp } from "../api/axios";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 
 const SignUpForm = () => {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    password: "",
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-  
-    console.log("Đang gửi request:", formData);
-  
-    try {
-      const res = await signUp(formData.email, formData.password, formData.fullName);
-      console.log("Response từ server:", res);
-  
-      alert("Signup success");
-    } catch (err: any) {
-      console.error("Lỗi", err);
-      setError(err.message || "Signup failed!");
-    }
-  
-    setLoading(false);
+    setTimeout(() => {
+      console.log("User registered:", { name, email });
+      navigate("/login", { state: { from: location.state?.from || "/" } });
+    }, 500);
   };
-  
 
   return (
-    <div className="w-full max-w-sm">
+    <div className="w-full max-w-md">
       <h2 className="text-2xl font-semibold mb-2">Create an account</h2>
       <p className="text-gray-500 mb-6">Enter your details below</p>
 
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
-          name="fullName"
           placeholder="Name"
-          value={formData.fullName}
-          onChange={handleChange}
-          className="w-full border-b border-gray-300 py-2 mb-4 outline-none focus:border-black"
+          className="border-b w-full py-2 outline-none"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
         />
         <input
-          type="text"
-          name="email"
+          type="email"
           placeholder="Email or Phone Number"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full border-b border-gray-300 py-2 mb-4 outline-none focus:border-black"
+          className="border-b w-full py-2 outline-none"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
         <input
           type="password"
-          name="password"
           placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          className="w-full border-b border-gray-300 py-2 mb-6 outline-none focus:border-black"
+          className="border-b w-full py-2 outline-none"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           required
         />
-
-        <button
-          type="submit"
-          className="w-full bg-red-500 text-white py-2 rounded-md mb-4"
-          disabled={loading}
-        >
-          {loading ? "Creating Account..." : "Create Account"}
+        <button type="submit" className="w-full bg-red-500 text-white py-2 rounded-md">
+          Create Account
         </button>
       </form>
 
-      <button className="w-full flex items-center justify-center border py-2 rounded-lg hover:bg-gray-100 transition mb-4">
-        <FcGoogle className="mr-2" size={20} /> Sign up with Google
+      <button className="w-full flex items-center justify-center border py-2 mt-4">
+        <img src="/assets/icons/google.png" alt="Google" className="w-5 h-5 mr-2" />
+        Sign up with Google
       </button>
 
-      <div className="text-center">
+      <p className="text-center mt-4">
         Already have an account?{" "}
-        <Link to="/login" className="text-red-500">
+        <Link
+          to="/login"
+          state={{ from: location.state?.from || "/" }}
+          className="text-black-500 font-medium"
+        >
           Log in
         </Link>
-      </div>
+      </p>
     </div>
   );
 };

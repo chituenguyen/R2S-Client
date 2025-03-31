@@ -1,74 +1,60 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAuthStore } from "../store/store";
 
 const LoginForm = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  const login = useAuthStore((state) => state.login);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const fromPage = location.state?.from || "/";
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-
-    try {
-      const response = await axios.post("http://localhost:3003/api/auth/login", formData);
-      console.log("Login Success:", response.data);
-      localStorage.setItem("token", response.data.access_token);
-      navigate("/");
-    } catch (err: any) {
-      console.error("Login Error:", err.response?.data || err.message);
-      setError(err.response?.data?.message || "Login failed");
-    } finally {
-      setLoading(false);
-    }
+    console.log("User logged in:", { email, password });
+    login({ email });
+    navigate(fromPage === "/signup" ? "/" : fromPage, { replace: true });
   };
 
   return (
-    <div className="max-w-[400px] w-full mx-auto">
-      <h2 className="text-2xl font-semibold mb-2">Log in to Exclusive</h2>
-      <p className="text-gray-500 mb-6">Enter your details below</p>
+    <div className="max-w-md w-full">
+      <h2 className="text-4xl font-semibold mb-2">Log in to Exclusive</h2>
+      <p className="text-gray-900 mb-6">Enter your details below</p>
 
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleLogin} className="space-y-4">
         <input
           type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full border-b border-gray-300 py-2 mb-4 focus:outline-none focus:border-black"
+          placeholder="Email or Phone Number"
+          className="w-full border-b p-2 focus:outline-none"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
         <input
           type="password"
-          name="password"
           placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          className="w-full border-b border-gray-300 py-2 mb-4 focus:outline-none focus:border-black"
+          className="w-full border-b p-2 focus:outline-none"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           required
         />
 
         <div className="flex items-center justify-between">
           <button
             type="submit"
-            className="bg-red-500 text-white py-3 px-6 rounded-md hover:bg-red-600 transition disabled:opacity-50"
-            disabled={loading}
+            className="bg-red-500 text-white py-3 px-9 rounded-md hover:bg-red-600"
           >
-            {loading ? "Logging in..." : "Log in"}
+            Log In
           </button>
-          <Link to="#" className="text-red-500 text-sm">Forgot Password?</Link>
+          <button
+            type="button"
+            className="text-red-500 hover:underline"
+            onClick={() => navigate("/forgot-password")}
+          >
+            Forget Password?
+          </button>
         </div>
       </form>
     </div>

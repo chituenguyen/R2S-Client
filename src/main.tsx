@@ -9,6 +9,9 @@ import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/SignupPages";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import LoginPage from "./pages/LoginPages"; 
+import MyAccountPage from "./pages/MyAccountPage";
+import CartPage from "./pages/CartPage";
+import CheckoutPage from "./pages/CheckoutPage";
 
 const queryClient = new QueryClient();
 
@@ -22,8 +25,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/signup" element={<SignUpPage />} />
-              <Route path="/login" element={<LoginPage />} /> {/* Thêm route login */}
+              <Route path="/login" element={<LoginPage />} />
               <Route path="/product/:id" element={<ProductDetailPage />} />
+              <Route path="/my-account" element={<MyAccountPage />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
             </Routes>
           </div>
           <Footer className="mt-auto" />

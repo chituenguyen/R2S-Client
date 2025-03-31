@@ -1,18 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { FaStar, FaHeart } from "react-icons/fa";
+import { FiMinus, FiPlus } from "react-icons/fi";
 
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  description: string;
-  image: string;
-  stock: number;
-  rating: number;
-  reviews: number;
-}
-
-const fetchProduct = async (id: string) => {
+const fetchProduct = async (id) => {
   const response = await fetch(`http://localhost:3003/api/products/${id}`);
   if (!response.ok) {
     throw new Error("Failed to fetch product");
@@ -22,49 +14,115 @@ const fetchProduct = async (id: string) => {
 };
 
 const ProductDetail = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams();
   const { data: product, error, isLoading } = useQuery({
     queryKey: ["product", id],
-    queryFn: () => fetchProduct(id!),
+    queryFn: () => fetchProduct(id),
     enabled: !!id,
   });
-  if (isLoading) {
-    return <div className="text-center py-10">Loading...</div>;
-  }
-  if (error) {
-    return <div className="text-center py-10 text-red-500">Error loading product.</div>;
-  }
-  const productImage = `/assets/images/${id}.jpg`;
+
+  const [selectedImage, setSelectedImage] = useState(`/assets/images/${id}.jpg`);
+  const [quantity, setQuantity] = useState(1);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [isMinusPressed, setIsMinusPressed] = useState(false);
+  const [isPlusPressed, setIsPlusPressed] = useState(false);
+
+  if (isLoading) return <div className="text-center py-10">Loading...</div>;
+  if (error) return <div className="text-center py-10 text-red-500">Error loading product.</div>;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-      <div>
-        <img src={productImage} alt={product.name} className="w-full rounded-lg shadow-lg" />
-      </div>      
-      <div>
-        <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-        <p className="text-2xl font-semibold text-red-500 my-4">${product.price}</p>
-        <p className="text-gray-700 mb-4">{product.description}</p>       
-        <div className="mb-4">
-          <span className="font-semibold">Colors:</span>
-          <div className="flex space-x-2 mt-2">
-            <div className="w-6 h-6 bg-red-500 rounded-full border cursor-pointer"></div>
-            <div className="w-6 h-6 bg-blue-500 rounded-full border cursor-pointer"></div>
-            <div className="w-6 h-6 bg-black rounded-full border cursor-pointer"></div>
+    <div className="flex px-[100px] gap-4 items-start">
+      <div className="flex">
+        <div className="flex flex-col space-y-4 mr-6">
+          {[1, 2, 3, 4].map((num) => (
+            <img
+              key={num}
+              src={`/assets/images/${num}.jpg`}
+              alt={`Thumbnail ${num}`}
+              className="w-[150px] h-[138px] object-cover rounded-lg cursor-pointer border hover:border-red-500 transition"
+              onClick={() => setSelectedImage(`/assets/images/${id}.jpg`)}
+            />
+          ))}
+        </div>
+        <img
+          src={selectedImage}
+          alt={product.name}
+          className="w-[650px] h-[600px] object-cover rounded-lg shadow-lg bg-gray-100"
+        />
+      </div>
+
+      <div className="flex-1 ml-[90px]">
+        <h1 className="text-3xl font-semibold mb-2">{product.name}</h1>
+        <div className="flex items-center space-x-2 mb-2">
+          <div className="flex text-yellow-400">
+            {[...Array(5)].map((_, i) => <FaStar key={i} />)}
           </div>
-        </div>       
-        <div className="mb-4">
-          <span className="font-semibold">Size:</span>
-          <div className="flex space-x-2 mt-2">
-            <button className="px-3 py-1 border rounded">S</button>
-            <button className="px-3 py-1 border rounded">M</button>
-            <button className="px-3 py-1 border rounded">L</button>
-            <button className="px-3 py-1 border rounded">XL</button>
+          <span className="text-gray-500">({product.reviews} Reviews)</span>
+        </div>
+        <p className="text-2xl my-4">${product.price}</p>
+        <p className="text-gray-700 text-sm mb-4">{product.description}</p>
+
+        <div className="flex items-center mb-4">
+          <span className="font-semibold mr-3">Colours:</span>
+          <div className="flex space-x-2">
+            {["blue", "red"].map((color) => (
+              <div
+                key={color}
+                className={`w-4 h-4 rounded-full border cursor-pointer ${color === "blue" ? "bg-blue-500" : "bg-red-500"} 
+                ${selectedColor === color ? "border-black" : ""}`}
+                onClick={() => setSelectedColor(color)}
+              ></div>
+            ))}
           </div>
-        </div>       
+        </div>
+
+        <div className="flex items-center mb-4">
+          <span className="font-semibold mr-3">Size:</span>
+          <div className="flex space-x-2">
+            {["XS", "S", "M", "L", "XL"].map((size) => (
+              <button
+                key={size}
+                className={`px-3 py-1 border rounded ${selectedSize === size ? "bg-red-500 text-white" : ""}`}
+                onClick={() => setSelectedSize(size)}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="flex items-center space-x-4 mt-4">
-          <input type="number" defaultValue={1} min={1} className="w-16 text-center border rounded p-2" />
-          <button className="px-6 py-3 bg-red-500 text-white rounded-lg shadow">Buy Now</button>
+          <div className="flex items-center border rounded overflow-hidden">
+            <button
+              className={`px-2 py-2 ${isMinusPressed ? "bg-white text-red-500" : "bg-red-500 text-white"}`}
+              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+              onMouseDown={() => setIsMinusPressed(true)}
+              onMouseUp={() => setIsMinusPressed(false)}
+              onMouseLeave={() => setIsMinusPressed(false)}
+            >
+              <FiMinus />
+            </button>
+            <input
+              value={quantity}
+              min={1}
+              className="w-[70px] text-center font-semibold border-none outline-none"
+              readOnly
+            />
+            <button
+              className={`px-2 py-2 ${isPlusPressed ? "bg-white text-red-500" : "bg-red-500 text-white"}`}
+              onClick={() => setQuantity((q) => q + 1)}
+              onMouseDown={() => setIsPlusPressed(true)}
+              onMouseUp={() => setIsPlusPressed(false)}
+              onMouseLeave={() => setIsPlusPressed(false)}
+            >
+              <FiPlus />
+            </button>
+          </div>
+          <button className="px-10 py-2 bg-red-500 text-white rounded-lg shadow">Buy Now</button>
+          <button className="p-3 border border-gray-300 rounded-lg">
+            <FaHeart className="cursor-pointer" style={{ fill: "none", stroke: "black", strokeWidth: "40" }} />
+          </button>
         </div>
       </div>
     </div>

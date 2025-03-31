@@ -11,6 +11,6 @@ export const signUp = async (email: string, password: string, fullName?: string)
     });
     return response.data;
   } catch (error: any) {
-    throw error.response?.data || "Something went wrong";
+    throw error.response?.data || "WRONG";
   }
 };

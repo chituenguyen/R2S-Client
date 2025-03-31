@@ -12,11 +12,11 @@ const Order: React.FC = () => {
     queryKey: ['orders'], 
     queryFn: () => Product.AllOrder(),
 });
-  // console.log("data", data);
+  console.log("data", data);
 
 
 const mutate = useMutation({
-    mutationFn: ({ id}: { id: number }) => Product.ChangeStatus(id),
+  mutationFn: ({ id, status }: { id: number, status: string }) => Product.ChangeStatus(id, status),
     onSuccess: () => {
       console.log("Product updated successfully");
       queryClient.invalidateQueries({ queryKey: ['orders'] }); // Làm mới dữ liệu
@@ -26,10 +26,13 @@ const mutate = useMutation({
       alert("Update product error");
     },
   });
-  console.log('mutate',mutate.data)
+  
 
   // Removed unused destructured variables
-
+  const onSubmit = (id: number) => {
+    console.log("id", id)
+    mutate.mutate({ id, status: "done" });
+};
 
   if (isPending) {
     return <div>Loading...</div>;
@@ -101,7 +104,7 @@ const mutate = useMutation({
                   <td className="border border-gray-300 p-2  ">
                   {order.status !== 'done' && (
                       <button className="bg-green-500 w-[50px] h-[30px]"
-                      onClick={() => mutate.mutate({ id: order.id })}>
+                      onClick={() => onSubmit(order.id)}>
                       done
                       </button>
                       )}

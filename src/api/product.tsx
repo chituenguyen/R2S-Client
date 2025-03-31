@@ -62,16 +62,15 @@ export const AllOrder = async () => {
         throw error;
     }
 }
-export const ChangeStatus = async (id:number) => {
+export const ChangeStatus = async (id: number, status: string) => {
   try {
-      const res = await axios.get(`https://devapi.uniscore.vn/uri/api/orders/${id}`);
-      console.log("resdata",res.data)
-      return res.data;
+    const res = await axios.put(`https://devapi.uniscore.vn/uri/api/orders/${id}`, { status: status });
+    return res.data;
   } catch (error) {
-      console.error("Error in AllOrder:", error);
-      throw error;
+    console.error("Error in ChangeStatus:", error);
+    throw error;
   }
-}
+};
 
 async function searchProducts(name: string) {
   try {

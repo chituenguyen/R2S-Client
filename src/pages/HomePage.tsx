@@ -16,18 +16,12 @@ function HomePage() {
     queryKey: ["product"],
     queryFn: () => product.getProductList(),
   });
-  // console.log("Data:", data);
-  // console.log("Data.data:", data.data);
   const [currentProduct, setCurrentProduct] = useState(1);
 
-  // Tính toán các sản phẩm cho trang hiện tại
   const startIndex = (currentProduct - 1) * PRODUCT_PER_PAGE;
   const endIndex = startIndex + PRODUCT_PER_PAGE;
   const currentProductList = data ? data.data.slice(startIndex, endIndex) : [];
 
-  // console.log("currentProductList:", currentProductList);
-  const totalProduct = data ? Math.ceil(data.length / PRODUCT_PER_PAGE) : 0;
-  const slug = 0;
 
   const handleShowAllProducts = () => {
     setCurrentProduct(1); // Reset về trang đầu tiên

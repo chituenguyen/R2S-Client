@@ -100,10 +100,16 @@ const RelatedProduct = ({ currentProductId }: OurProductProps) => {
             <div className="flex items-center gap-3">
               <a className="text-red-500 text-[16px] font-medium">${product.price}</a>
               <div className="flex items-center gap-1">
-                {[...Array(5)].map((_, i) =>
-                  i < product.rate ? <img src="/Star.svg" key={i} alt="Star" className="w-[20px] h-[20px]" /> : <img src="/GrayStar.svg" key={i} alt="Star" className="w-[20px] h-[20px]" />
-                )}
-                <span className="text-gray-500 text-[14px] font-medium">({product.stock})</span>
+                {[...Array(5)].map((_, i) => (
+                  i < (product.rate || 4) ? (
+                    <img src="/Star.svg" key={i} alt="Star" className="w-[20px] h-[20px]" />
+                  ) : (
+                    <img src="/GrayStar.svg" key={i} alt="Star" className="w-[20px] h-[20px]" />
+                  )
+                ))}
+                <span className="text-gray-500 text-[14px] font-medium">
+                  ({product.stock || 50})
+                </span>
               </div>
             </div>
           </div>

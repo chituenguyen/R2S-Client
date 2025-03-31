@@ -1,13 +1,24 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const [cart, setCart] = useState<any[]>([]);
   const [updatedCart, setUpdatedCart] = useState<any[]>([]);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
     setCart(storedCart);
     setUpdatedCart(storedCart);
+
+    // Kiểm tra vai trò ADMIN
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      const user = JSON.parse(userData);
+      if (user.roles && user.roles[0] === "ADMIN") {
+        setIsAdmin(true);
+      }
+    }
   }, []);
 
   const handleRemoveItem = (id: number) => {
@@ -17,26 +28,36 @@ const Cart = () => {
     window.location.reload();
   };
 
-  const handleQuantityChange = (id: number, type: "increase" | "decrease") => {
-    const updated = updatedCart.map((item) =>
-      item.id === id
-        ? { ...item, quantity: Math.max(1, item.quantity + (type === "increase" ? 1 : -1)) }
-        : item
+   // Xử lý nhập số lượng trực tiếp
+  const handleQuantityInputChange = (id: number, value: string) => {
+    const newQuantity = Math.max(1, parseInt(value) || 1);
+    const updated = cart.map((item) =>
+      item.id === id ? { ...item, quantity: newQuantity } : item
     );
-  
-    setUpdatedCart(updated); // Chỉ cập nhật updatedCart
+
+    setUpdatedCart(updated); // Update the displayed cart state
   };
-  
 
   const handleUpdateCart = () => {
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
+  const navigate = useNavigate();
+  const isLoggedIn = !!localStorage.getItem("user"); // Kiểm tra đăng nhập
+
+  const handleCheckout = () => {
+    if (isLoggedIn) {
+      navigate("/checkout");
+    } else {
+      navigate("/login");
+    }
+  };
+
   return (
     <div className="container mx-auto py-12 mt-24">
       <div className="flex items-center space-x-2 text-gray-500 text-[14px]">
-        <a href="/" className="hover:underline">Home</a>
+        <a href={isAdmin ? "/productmanage" : "/"} className="hover:underline">Home</a>
         <img src="/CrossLine.svg" alt="CrossLine" className="w-[7px]" />
         <span className="font-normal text-black">Cart</span>
       </div>
@@ -46,39 +67,37 @@ const Cart = () => {
       <table className="min-w-full border-separate border-spacing-y-4">
   <thead className="shadow-md rounded">
     <tr>
-      <th className="p-4 w-2/5 text-[16px]">Product</th>
-      <th className="p-4 w-1/5 text-left text-[16px]">Price</th>
-      <th className="p-4 w-1/5 text-left text-[16px]">Quantity</th>
-      <th className="p-4 w-1/5 text-left text-[16px]">Subtotal</th>
-      <th className="p-4 w-1/5 text-[16px]">Action</th>
+      <th className="p-4 text-[16px]">Product</th>
+      <th className="p-4 text-left text-[16px]">Price</th>
+      <th className="p-4 text-left text-[16px]">Quantity</th>
+      <th className="p-4 text-left text-[16px]">Subtotal</th>
+      <th className="p-4 text-[16px]">Action</th>
     </tr>
   </thead>
   <tbody>
     {updatedCart.length > 0 ? (updatedCart.map((item) => (
       <tr key={item.id} className="shadow-md rounded">
-        <td className="p-4 flex items-center gap-2 min-w-[380px] text-[16px]">
-          <img src={item.image} alt={item.name} className="w-16 h-16" />
+        <td className="p-4 flex items-center gap-2 text-[16px]">
+          <img src={item.image} alt={item.name} className="hidden sm:flex w-16 h-16" />
           {item.name}
         </td>
-        <td className="p-4 min-w-[180px] text-[16px]">${item.price}</td>
-        <td className="p-4 min-w-[180px]">
-        <div className="flex flex-row items-center">
-            <div className="flex flex-col items-center justify-center gap-y-2">
-                <button onClick={() => handleQuantityChange(item.id, "increase")} className="group border border-black">
-                    <img src="/Drop-Up-Small.svg" alt="Drop-Up-Small" className="w-[16px] h-[16px] group-hover:bg-gray-200 group-hover:font-bold transition-transform" />
-                </button>
-
-                <button onClick={() => handleQuantityChange(item.id, "decrease")} className="group border border-black">
-                    <img src="/Drop-Down-Small.svg" alt="Drop-Down-Small" className="w-[16px] h-[16px] group-hover:bg-gray-200 group-hover:font-bold transition-transform" />
-                </button>
-            </div>
-            <span className="text-[16px] mx-4">{item.quantity}</span>
-        </div>
+        <td className="p-4 text-[16px]">${item.price}</td>
+        <td className="p-4 text-left"> 
+        <div className="flex items-left gap-2">
+              {/* Input để nhập số lượng */}
+              <input 
+                type="number" 
+                className="w-14 h-10 text-center rounded-lg" 
+                value={item.quantity} 
+                onChange={(e) => handleQuantityInputChange(item.id, e.target.value)} 
+                min="1"
+              />
+          </div>
 
         </td>
 
-        <td className="p-4 min-w-[180px] text-[16px]">${ (item.price * item.quantity).toFixed(2) }</td>
-        <td className="p-4 min-w-[180px] text-center">
+        <td className="p-4 text-[16px]">${ (item.price * item.quantity).toFixed(2) }</td>
+        <td className="p-4 text-center">
           <button
             className="text-[16px] text-red-500 hover:underline"
             onClick={() => handleRemoveItem(item.id)}
@@ -90,11 +109,11 @@ const Cart = () => {
     ))
 ) : (
     <tr className="shadow-md rounded">      
-      <td className="p-4 flex items-center gap-2 min-w-[380px] text-[16px]">
+      <td className="p-4 flex items-center gap-2 text-[16px]">
           Your cart is empty.
         </td>
-        <td className="p-4 min-w-[180px] text-[16px]">$0</td>
-        <td className="p-4 min-w-[180px] text-[16px]">
+        <td className="p-4 text-[16px]">$0</td>
+        <td className="p-4 text-[16px]">
           <input
             type="number"
             value={0}
@@ -103,8 +122,8 @@ const Cart = () => {
             readOnly
           />
         </td>
-        <td className="p-4 min-w-[180px] text-[16px]">$0</td>
-        <td className="p-4 min-w-[180px] text-center">
+        <td className="p-4 text-[16px]">$0</td>
+        <td className="p-4 text-center">
         </td>
     </tr>
   )
@@ -115,15 +134,16 @@ const Cart = () => {
 
       </div>
           <div className="flex justify-between mt-6">
-            <a href="/" className="px-4 py-2 bg-gray-200 text-black rounded text-[16px]">
-            Return To Shop
-            </a>
-            <button className="px-4 py-2 bg-red-500 text-white rounded text-[16px]" onClick={handleUpdateCart}>
-              Update Cart
-            </button>
+            <a href={isAdmin ? "/productmanage" : "/"} className="px-4 py-2 bg-gray-200 text-black rounded text-[16px]">Return To Shop</a>
+            {cart.length > 0 && (
+              <button className="px-4 py-2 bg-red-500 text-white rounded text-[16px]" onClick={handleUpdateCart}>
+                Update Cart
+              </button>
+            )}
           </div>
         </div>
       </div>
+      {cart.length > 0 && (
       <div className="grid grid-cols-[60%_40%] gap-10 mt-10">
         <div className="justify-between">
 
@@ -153,11 +173,14 @@ const Cart = () => {
             <span>Total:</span>
             <span>${cart.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}</span>
             </div>
-          <button className="w-full mt-4 ml-12 w-[260px] h-[56px] bg-red-500 text-white rounded">
+          <button
+            onClick={handleCheckout}
+            className="w-full mt-4 ml-12 w-[260px] h-[56px] bg-red-500 text-white rounded">
             Proceed to checkout
           </button>
         </div>
       </div>
+      )}
     </div>
   );
 };

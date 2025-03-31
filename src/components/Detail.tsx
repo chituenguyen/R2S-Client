@@ -82,20 +82,33 @@ const Detail = () => {
         {/* Left: Image Gallery */}
         <div className="flex gap-4 items-start w-full">
           {/* Ảnh nhỏ (bên trái) */}
+         
           <div className="flex flex-col gap-2">
-            {product.images?.slice(0, 4).map((img, index) => (
-              <div key={index} className="bg-[#F5F5F5] rounded w-[170px] h-[138px] flex items-center justify-center">
-                <img
-                src={img}
-                alt={`Thumbnail ${index}`}
-                className={`h-[120px] p-1 cursor-pointer ${
-                    selectedImage === img ? "border-blue-500" : "border-gray-300"
-                }`}
-                onClick={() => setSelectedImage(img)}
-                />
-              </div>
-            ))}
-          </div>
+          {Array(4)
+            .fill(null)
+            .map((_, index) => {
+              const img = product.images?.[index]; // Lấy ảnh nếu có
+              return (
+                <div
+                  key={index}
+                  className="bg-[#F5F5F5] rounded w-[170px] h-[138px] flex items-center justify-center"
+                >
+                  {img ? (
+                    <img
+                      src={img}
+                      alt={`Thumbnail ${index}`}
+                      className={`h-[120px] p-1 cursor-pointer ${
+                        selectedImage === img ? "border-blue-500" : "border-gray-300"
+                      }`}
+                      onClick={() => setSelectedImage(img)}
+                    />
+                  ) : (
+                    <span className="text-gray-400">No Image</span>
+                  )}
+                </div>
+              );
+            })}
+        </div>
 
           {/* Ảnh lớn */}
           <div className="bg-[#F5F5F5] rounded w-[450px] h-[576px] w-full p-4 flex items-center justify-center">
@@ -109,8 +122,17 @@ const Detail = () => {
         <div className="w-full ml-auto">
           <h1 className="text-[24px] font-semibold font-[Inter]">{product.name}</h1>
           <div className="flex items-center gap-2 my-2">
-            {[...Array(5)].map((_, i) => (i < product.rate ? <img src="/Star.svg" key={i} alt="Star" className="w-[20px] h-[20px]" /> : <img src="/GrayStar.svg" key={i} alt="Star" className="w-[20px] h-[20px]" />))}
-            <span className="text-gray-500 text-[14px]">({product.stock} Reviews)</span>
+            {[...Array(5)].map((_, i) => (
+              i < (product.rate || 4) ? (
+              <img src="/Star.svg" key={i} alt="Star" className="w-[20px] h-[20px]" />
+              ) : (
+              <img src="/GrayStar.svg" key={i} alt="Star" className="w-[20px] h-[20px]" />
+              )
+            ))}
+            <span className="text-gray-500 text-[14px]">(100 Reviews)</span>
+            <span className="text-gray-500 text-[14px]">
+              ({product.stock || 50} in stock)
+            </span>
           </div>
           <p className="text-[24px] text-black font-[Inter]">${product.price}</p>
           <p className="text-[14px] text-black my-4">{product.description}</p>

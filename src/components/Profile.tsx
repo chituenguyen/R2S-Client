@@ -12,13 +12,24 @@ const Profile: React.FC = () => {
     created_at: string;
   } | null>(null);
 
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
+
     // Fetch user data from localStorage (update this if using API)
     const storedUser = JSON.parse(localStorage.getItem("user") || "null");
     if (storedUser) {
       setUser(storedUser);
+      
+      // Kiểm tra vai trò ADMIN
+      const userData = localStorage.getItem("user");
+      if (userData) {
+        const user = JSON.parse(userData);
+        if (user.roles && user.roles[0] === "ADMIN") {
+          setIsAdmin(true);
+        }
+      }
     } else {
       navigate("/login"); // Redirect if not logged in
     }
@@ -28,6 +39,7 @@ const Profile: React.FC = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user"); // Remove user data
+    localStorage.removeItem("checkoutInfo");
     
     navigate("/login");
     window.location.reload();
@@ -51,7 +63,7 @@ const Profile: React.FC = () => {
     console.log("Sending update request with data:", { firstname, lastname, address });
   
     try {
-      const response = await fetch("http://localhost:3000/api/auth/update-profile", {
+      const response = await fetch("https://devapi.uniscore.vn/uri/api/auth/update-profile", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -91,7 +103,7 @@ const Profile: React.FC = () => {
   return (
     <div className="container mx-auto py-12 mt-24">
     <div className="flex items-center space-x-2 text-gray-500 text-[14px]">
-      <a href="/" className="hover:underline">Home</a>
+      <a href={isAdmin ? "/productmanage" : "/"} className="hover:underline">Home</a>
       <img src="/CrossLine.svg" alt="CrossLine" className="w-[7px]" />
       <span className="font-normal text-black">My Account</span>
     </div>
@@ -135,7 +147,7 @@ const Profile: React.FC = () => {
         <div className="grid grid-cols-[1.5fr_1fr] gap-6">
         {/* First Name */}
           <div>
-            <label className="block text-[16px] mb-1">First Name</label>
+            <label className="block text-[16px] mb-1">First Name<a className="text-red-500">*</a></label>
             <input
               type="text"
               value={user?.firstname || ""}
@@ -146,7 +158,7 @@ const Profile: React.FC = () => {
 
           {/* Last Name */}
           <div>
-            <label className="block text-[16px] mb-1">Last Name</label>
+            <label className="block text-[16px] mb-1">Last Name<a className="text-red-500">*</a></label>
             <input
               type="text"
               value={user?.lastname || ""}
@@ -171,7 +183,7 @@ const Profile: React.FC = () => {
 
           {/* Address */}
           <div className="col-span-2">
-            <label className="block text-[16px] mb-1">Address</label>
+            <label className="block text-[16px] mb-1">Address<a className="text-red-500">*</a></label>
             <input
               type="text"
               value={user?.address || ""}

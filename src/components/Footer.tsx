@@ -4,19 +4,19 @@ import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from "react-icons/f
 const Footer: React.FC = () => {
   return (
     <footer className="bg-black text-white py-10">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-5 gap-8">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-5 gap-8">
         {/* Exclusive - Subscribe */}
         <div>
           <h2 className="text-[24px] font-semibold">Exclusive</h2>
           <p className="mt-3 text-[20px] py-4">Subscribe</p>
           <p className="text-[16px] text-gray-300">Get 10% off your first order</p>
-          <div className="flex items-center mt-3 border border-white rounded px-3 py-2">
+          <div className="hidden lg:flex items-center mt-3 border border-white rounded px-3 py-2 relative w-full max-w-[300px]">
             <input
               type="email"
               placeholder="Enter your email"
-              className="bg-transparent outline-none flex-1 text-sm"
+              className="bg-transparent outline-none flex-1 text-sm pr-10" 
             />
-            <button className="text-white">
+            <button className="text-white absolute right-3 top-1/2 -translate-y-1/2">
               ➤
             </button>
           </div>
@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
         <div className="space-y-4">
           <h2 className="text-[20px]">Support</h2>
           <p className="mt-3 text-[16px] text-gray-300">111 Bijoy sarani, Dhaka, DH 1515, Bangladesh.</p>
-          <p className="text-[16px] mt-2 text-gray-300">exclusive@gmail.com</p>
+          <p className="hidden lg:flex text-[16px] mt-2 text-gray-300">exclusive@gmail.com</p>
           <p className="text-[16px] mt-2 text-gray-300">+88015-88888-9999</p>
         </div>
 
@@ -64,7 +64,7 @@ const Footer: React.FC = () => {
               <img src="/AppStore.svg" alt="App Store" className="w-28" />
             </div>
           </div>
-          <div className="flex justify-left space-x-7 ml-2 mt-6">
+          <div className="hidden lg:flex justify-left space-x-7 ml-2 mt-6">
             <img src="/Facebook.svg" alt="Facebook" className="w-[10.5px] h-[18px] cursor-pointer" />
             <img src="/Twitter.svg" alt="Twitter" className="h-[19px] cursor-pointer" />
             <img src="/Instagram.svg" alt="Instagram" className="w-[18px] h-[18px] cursor-pointer" />

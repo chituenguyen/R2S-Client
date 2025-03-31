@@ -15,7 +15,7 @@ export interface Product {
 }
 
 const fetchAllProducts = async (): Promise<Product[]> => {
-  const { data } = await axios.get("http://localhost:3000/api/products");
+  const { data } = await axios.get("https://devapi.uniscore.vn/uri/api/products");
 
   // ✅ Đảm bảo data luôn là một mảng
   return Array.isArray(data.data) ? data.data : [];

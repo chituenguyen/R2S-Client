@@ -4,7 +4,7 @@ import { Product } from "./useGetAllProducts"; // Import lại interface Product
 
 const fetchProductById = async (id: number): Promise<Product | null> => {
   try {
-    const { data } = await axios.get(`http://localhost:3000/api/products/${id}`);
+    const { data } = await axios.get(`https://devapi.uniscore.vn/uri/api/products/${id}`);
     console.log("datadata:", data); // Debug API response
     return data.data[0] || null; // Trả về null nếu không có dữ liệu
   } catch (error) {

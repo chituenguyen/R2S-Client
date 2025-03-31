@@ -16,7 +16,7 @@ const LogIn = () => {
 
   // Gọi API đăng nhập
   const loginUser = async ({ email, password }: { email: string; password: string }) => {
-    const response = await axios.post("http://localhost:3000/api/auth/login", { email, password });
+    const response = await axios.post("https://devapi.uniscore.vn/uri/api/auth/login", { email, password });
     return response.data;
   };
 
@@ -25,12 +25,20 @@ const LogIn = () => {
     onSuccess: (data) => {
       console.log("Login success:", data);
       localStorage.setItem("accessToken", data.tokens.accessToken);
+      console.log("Access Token:", data.tokens.accessToken); // Kiểm tra token có đúng không
       localStorage.setItem("isLoggedIn", "true"); 
       localStorage.setItem("user", JSON.stringify(data.user));
 
       toast.success("Logged in successfully!", { autoClose: 1500 });
       setTimeout(() => {
-        navigate("/");
+        const userRole = data.user.roles[0]; // Lấy role của user
+
+        if (userRole === "ADMIN") {
+          navigate("/productmanage"); // Nếu là ADMIN, điều hướng tới ProductManage
+        } else {
+          navigate("/"); // Nếu không phải ADMIN, điều hướng về trang chủ
+        }
+
         window.location.reload();
       }, 1500);
       
@@ -65,7 +73,7 @@ const LogIn = () => {
             <input
               type="text"
               name="email"
-              placeholder="Email or Phone Number"
+              placeholder="Email"
               value={formData.email}
               onChange={handleChange}
               className="w-full mb-4 border-b border-gray-400 text-gray-600 text-[16px] outline-none"

@@ -1,7 +1,9 @@
 import React from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 
+
 function Search(){
+  
     return(
         <div>
       <label className="input input-bordered flex items-center gap-2 bg-white focus:outline-none border rounded-lg px-3 py-2 shadow-md">

@@ -6,8 +6,10 @@ import ProductDetail from '../pages/Productdetail'
 import OrderPage from '../pages/OrderPage'
 import Checkout from '../pages/Checkout'
 import MyProfile from '../pages/Dashboard/MyProfile'
+import AdminPage from '../pages/AdminPage/Admin'
+import ProtectedRoute from '../router/ProtectedRoute';
+import Order from '../pages/AdminPage/Oder'
 // import PostDetail from '../components/effect/postDetail'
-
 
 export const routes: RouteObject[] = [
   {
@@ -45,6 +47,23 @@ export const routes: RouteObject[] = [
     element: <MyProfile/>,
     children:[]
   },
+  {
+    path: '/admin',
+    element: (
+      <ProtectedRoute allowedRoles={['ADMIN']} userRoles={JSON.parse(localStorage.getItem('user') || '{}').roles || []} /> // Lấy roles từ localStorage
+    ),
+    children: [
+      {
+        index: true,
+        element: <AdminPage />,
+      },
+      {
+          path: 'order',
+          element: <Order />,
+      },
+    ],
+  },
+
 
 
 ]

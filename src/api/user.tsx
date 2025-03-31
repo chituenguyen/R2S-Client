@@ -5,7 +5,7 @@ import {LoginData,SignUpData}  from "../redux/type";
 
 export const SignInUser = async (Logindata: LoginData) => {
     const res = await axios.post(
-      'http://localhost:3000/api/auth/login',
+      'https://devapi.uniscore.vn/uri/api/auth/login',
       Logindata
     );
     return res.data;
@@ -13,7 +13,7 @@ export const SignInUser = async (Logindata: LoginData) => {
 
   export const SignUpUser = async (data: SignUpData) => {
     const res = await axios.post(
-      'http://localhost:3000/api/auth/register',
+      'https://devapi.uniscore.vn/uri/api/auth/register',
       data
     );
     return res.data;
@@ -21,9 +21,10 @@ export const SignInUser = async (Logindata: LoginData) => {
 
   export const LogOut = async (Token :string) => {
     const res = await axios.post(
-      'http://localhost:3000/api/auth/logout',
+      'https://devapi.uniscore.vn/uri/api/auth/logout',
       Token
     );
     return res.data;
   };
+
 

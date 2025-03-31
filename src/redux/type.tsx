@@ -52,6 +52,15 @@ export interface orderData {
   phone: string;
   email: string;
 }
+
+export interface Dataput {
+  name: string;
+  price: string;
+  description: string;
+  images: File[];
+}
+
+
   
   
 

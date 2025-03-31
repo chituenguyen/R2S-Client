@@ -49,6 +49,7 @@ function SignIn() {
   const onSubmit = (data: LoginData) => {
     mutation.mutate(data);
   };
+  
 
 
   useEffect(() => {
@@ -57,9 +58,14 @@ function SignIn() {
       localStorage.setItem("refresh_token", JSON.stringify(data.tokens.refreshToken));
       localStorage.setItem("user", JSON.stringify(data.user));
       console.log(data);
-      
+      if (data.user.roles[0] === "ADMIN") {
+        navigate('/admin'); // Nếu là admin, chuyển hướng đến trang admin
+      }
+      else if (data.user.roles[0] === "USER") { 
+
         // Chuyển hướng sau khi refetch thành công
-        navigate('/');
+      navigate('/');
+      }
 
     }
   }, [isSuccess, data]);

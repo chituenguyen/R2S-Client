@@ -10,7 +10,7 @@ import { MdLocalMall,MdCancel, MdOutlineReviews  } from "react-icons/md";
 import * as user from "../../api/user";
 import { useMutation } from "@tanstack/react-query";
 import { useToast } from "../context/ToastContext";
-import { set } from "react-hook-form";
+
 
 
 function Header() {
@@ -34,7 +34,7 @@ function Header() {
   const NoneAccessToken = !hasAccessToken;
   useEffect(() => {
     const accessToken = localStorage.getItem('access_token');
-    setHasAccessToken(!accessToken); // Chuyển đổi giá trị thành boolean
+    setHasAccessToken(!!accessToken); // Chuyển đổi giá trị thành boolean
   }, [localStorage.getItem('access_token')]);
 
   const mutation = useMutation({
@@ -70,7 +70,7 @@ function Header() {
   //   }
   //   }, [cartItems]);
   const cartData = JSON.parse(localStorage.getItem('cart') || '[]');
-  setCartItemCount(cartData.length);
+  // setCartItemCount(cartData.length);
 
  
 

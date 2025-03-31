@@ -7,4 +7,34 @@
     "source.fixAll.eslint": "never",
     "source.organizeImports": "never"
   },
+  "cSpell.language": "en,vi",
+  "cSpell.userWords": [
+      "TypeScript",
+      "NodeJS",
+      "VSCode"
+  ],
+  "cSpell.ignoreWords": [
+      "hte",
+      "teh"
+  ],
+  "cSpell.ignorePaths": [
+      "**/node_modules/**",
+      "**/dist/**"
+  ],
+  "cSpell.words": [
+    "Colours",
+    "công",
+    "Đăng",
+    "Dataput",
+    "detaildata",
+    "Logindata",
+    "lòng",
+    "nhập",
+    "orderform",
+    "productbuy",
+    "Productdetail",
+    "thành",
+    "thất",
+    "thông"
+  ]
 }

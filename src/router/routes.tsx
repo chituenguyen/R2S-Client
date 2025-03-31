@@ -7,6 +7,11 @@ import Login from "../pages/Login"
 import ProductDetail from "../pages/ProductDetail"
 import Cart from "../pages/Cart"
 import Checkout from "../pages/Checkout"
+import Profile from "../pages/Profile"
+import ProductLike from "../pages/ProductLike"
+import AdminProduct from "../pages/AdminProduct"
+import Admin from "../pages/Admin"
+import AdminOrder from "../pages/OrdersAdmin"
 
 export const routes: RouteObject[] = [
   {
@@ -48,5 +53,29 @@ export const routes: RouteObject[] = [
     path:'/checkout',
     element: <Checkout />,
     children: []
+  },
+  {
+    path:'/profile',
+    element: <Profile/>,
+    children:[]
+  },
+  {
+    path:'/wishlist',
+    element: <ProductLike />,
+    children: []
+  },
+  {
+    path:'/admin',
+    element:<Admin/>,
+    children:[]
+  },
+  {
+    path:'/admin/product',
+    element: <AdminProduct/>,
+    children: []
+  },{
+    path:'/admin/order',
+    element:<AdminOrder/>,
+    children:[]
   }
 ]

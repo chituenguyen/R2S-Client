@@ -1,10 +1,29 @@
 import { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { FaUserCircle } from "react-icons/fa";
+import { fetchProducts } from "../../useQuery/api/api";
+import { useProduct } from "../../useQuery/hooks/useProduct";
+import { useQuery } from "@tanstack/react-query";
+import { searchName } from "../../useQuery/api/api";
 
 function Search() {
+  const navigate = useNavigate()
   const [user, setUser] = useState<{ email: string} | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [searchItem, setSearchItem] = useState<string>("")
+  const [cartQuantity, setCartQuantity] = useState<number>(0)
+  const [logout, setLogout] = useState(false)
+
+
+  useEffect(()=>{
+    if (logout) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      navigate("/login");
+      window.location.reload()
+      }
+    }, [logout]);
+
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -13,19 +32,49 @@ function Search() {
     }
   }, []);
 
+  const {data} = useProduct()
+
+  const { data: products, refetch } = useQuery({
+    queryKey: ["searchProducts", searchItem],
+    queryFn: () => searchName({ name: searchItem }),
+    enabled: false,
+  });
+
+  console.log(products)
+
   return (
     <div className="flex items-center space-x-4 mr-20">
       <div className="relative hidden md:block">
         <input
           type="text"
-          placeholder="What are you looking for?"
-          className="border px-4 py-2 text-sm w-60"
+          placeholder="Tìm kiếm sản phẩm..."
+          className="w-64 h-10 p-2"
+          value={searchItem}
+          onChange={(e) => setSearchItem(e.target.value)}
         />
-        <span className="absolute cursor-pointer right-3 top-2 text-gray-500">
-          🔍
+        <span className="absolute right-3 top-2 text-gray-500">
+          <button onClick={()=>refetch()}>🔍</button>
         </span>
+        {searchItem && (
+          <ul className="absolute z-10 bg-white shadow-md rounded w-full mt-2">
+            {Array.isArray(products?.data) && products.data.length > 0 ? (
+                products.data.map((product) => ( // ❌ Loại bỏ `.data`
+                <Link
+                  to={`/productdetail/${product.id}`}
+                  key={product.id}
+                  className="p-2 hover:bg-gray-200 flex items-center space-x-4"
+                >
+                  <img src={product.images[0]} alt="" className="w-10 h-10" />
+                  <span>{product.name}</span>
+                </Link>
+              ))
+            ) : (
+              <li className="p-2">Không có sản phẩm phù hợp</li>
+            )}
+          </ul>
+        )}
       </div>
-      <Link>❤️</Link>
+      <Link to='/wishlist'>❤️</Link>
       <Link to="/cart">🛒</Link>
       {user ? (
         <div className="hidden items-center space-x-3 md:flex lg:flex">
@@ -37,11 +86,11 @@ function Search() {
             </button>
             {dropdownOpen && (
                 <ul className="absolute top-8 right-1 bg-white shadow-md rounded w-44 z-20 p-2 space-y-2">
-                  <li className="hover:text-red-400"><Link>Manage My Account</Link></li>
+                  <li className="hover:text-red-400"><Link to='/profile'>Manage My Account</Link></li>
                   <li className="hover:text-red-400"><Link>My Order</Link></li>
                   <li className="hover:text-red-400"><Link>My Cancellations</Link></li>
                   <li className="hover:text-red-400"><Link>My Reviews</Link></li>
-                  <li className="hover:text-red-400"><Link>Logout</Link></li>
+                  <li className="hover:text-red-400"><button onClick={()=>setLogout(true)}>Logout</button></li>
                 </ul>
             )}
           </div>
@@ -49,12 +98,19 @@ function Search() {
         ) : (
           <Link to="/login" className="text-blue-500 hover:underline">Đăng nhập</Link>
         )}
-      
     </div>
   )
 }
 
 function Menu() {
+  const [user, setUser] = useState<{ email: string} | null>(null);
+
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
   return (
     <ul className="hidden md:flex space-x-10 text-gray-600 font-medium">
       <li className=" border-black">
@@ -67,13 +123,17 @@ function Menu() {
         <Link to="/about">About</Link>
       </li>
       <li className="">
-        <Link to="/signin">Sign in</Link>
+        {user ? (
+          <Link to="/profile">My Account</Link>
+        ):(
+          <Link to="/signin">Sign in</Link>
+        )}
       </li>
     </ul>
   )
 }
 
-const Header = () => {
+const Header: React.FC = () => {
   const [language, setLanguage] = useState("English")
   const [dropdownOpen, setDropdownOpen] = useState(false)
 

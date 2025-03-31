@@ -17,7 +17,7 @@ const SigninPage = () => {
     const mutation = useMutation({
       mutationFn: registerUser,
       onSuccess: (data) => {
-        toast("Dang ky thanh cong", {position: "top-right"});
+        toast("Đăng ký thành công", {position: "top-right"});
         setTimeout(() => {
           navigate("/login");
         }, 1000);

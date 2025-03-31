@@ -2,8 +2,12 @@ import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { createOrders } from "../../useQuery/api/api";
 import { toast } from "react-toastify";
+import { useCity } from "../../useQuery/hooks/useCity";
+import { useNavigate } from "react-router-dom";
 
 const CheckOutPage = () => {
+    const navigate = useNavigate()
+    const {data, isLoading} = useCity()
     const [paymentMethod, setPaymentMethod] = useState();
     const [userId, setUserId] = useState<number>(null)
     const [total, setTotal]=useState<number>(0)
@@ -31,7 +35,10 @@ const CheckOutPage = () => {
         mutationFn: createOrders,
         onSuccess: (data) =>{
             toast.success("Tạo Order thành công",{position:"top-right"})
-            console.log("order", data)
+            localStorage.removeItem('cart')
+            setTimeout(() => {
+                navigate('/');
+            }, 1000);
         },
         onError: (error) =>{
             console.log("err", error)
@@ -79,7 +86,17 @@ const CheckOutPage = () => {
                     <p className="text-zinc-400 text-sm">Apartment, floor, etc</p>
                     <input type="text" className="w-96 h-12 p-2 shadow-md rounded-md" />
                     <p className="text-zinc-400 text-sm">Town/City</p>
-                    <input type="text" className="w-96 h-12 p-2 shadow-md rounded-md" name="city" value={formData.city} onChange={handleChange}/>
+                    <select
+                        className="w-96 h-12 p-2 shadow-md rounded-md"
+                        name="city"
+                        value={formData.city}
+                        onChange={handleChange}
+                        >
+                    {data?.map((city)=>(
+                        <option>{city.name}</option>
+                    ))}
+                    </select>
+                    {/* <input type="text" className="w-96 h-12 p-2 shadow-md rounded-md" name="city" value={formData.city} onChange={handleChange}/> */}
                     <p className="text-zinc-400 text-sm">Phone Number</p>
                     <input type="text" className="w-96 h-12 p-2 shadow-md rounded-md" />
                     <p className="text-zinc-400 text-sm">Email Address</p>
@@ -93,14 +110,11 @@ const CheckOutPage = () => {
                     <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
                     <div className="space-y-4">
                     {cart.map((item)=>(
-                        <div>
                             <div key={item.product.id} className="flex justify-between items-center">
                                 <img src={item.product.images[0]} className="w-10 h-10"/>
                                 <span>{item.product.name}</span>
                                 <span className="font-medium">${Math.round(item.product.price * item.quantity)}</span>
                             </div>
-  
-                        </div>
                     ))}
                         <hr />
                             <div className="flex justify-between items-center">

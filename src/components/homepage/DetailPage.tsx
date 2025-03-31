@@ -6,22 +6,14 @@ import QuantitySelector from "../rating/ButtonQuanti";
 import LikePicker from "../rating/pickLike";
 import { useProductDetail } from "../../useQuery/hooks/useProductDetail";
 import { useParams } from "react-router-dom";
-
-interface Product {
-    id: number
-    name: string
-    price: number
-    description: string
-    image: string
-    category: string
-    brand: string
-    stock: number
-  }
+import { Product } from "../../useQuery/user/auth";
+import { toast } from "react-toastify";
 
 const DetailPage = () => {
     const {id} = useParams<{id: number}>()
     const {data} = useProductDetail(id)
     const [rating, setRating] = useState(4);
+    const [quantity, setQuantity] = useState(1)
     const [selectedImage, setSelectedImage] = useState(null)
     if (!data){
         return <></>
@@ -29,7 +21,27 @@ const DetailPage = () => {
     if (selectedImage === null) {
         setSelectedImage(data?.data[0].images[0]);
     }
-    console.log(data.data[0].images[1])
+    
+    const handleAddToCart = (product: Product) => {
+        const newItem: CartItem = { product, quantity: 1 };
+      
+        const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
+      
+        const updatedCart = [...existingCart];
+        const existingIndex = updatedCart.findIndex((item) => item.product.id === product.id);
+      
+        if (existingIndex >= 0) {
+          updatedCart[existingIndex].quantity += quantity;
+        } else {
+          updatedCart.push(newItem);
+        }
+    
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
+      
+        toast.success("🛒 Sản phẩm đã được thêm vào giỏ hàng!", { position: "top-right" });
+    }
+
+    console.log(data)
     
     return (
     <div className="max-w-7xl mx-auto p-6 space-y-10 sm:flex-col">
@@ -72,10 +84,12 @@ const DetailPage = () => {
                 <SizePicker />
             </div>
             <div className="flex space-x-10">
-                <QuantitySelector />
-                <button className="w-32 bg-red-400 text-white rounded-md">
+                <QuantitySelector quantity={quantity} onQuantityChange={setQuantity} />
+                {data.data?.map((product)=>(
+                    <button onClick={()=>handleAddToCart(product)} className="w-32 bg-red-400 text-white rounded-md">
                     Buy Now
-                </button>
+                    </button>
+                ))}
                 <LikePicker />
             </div>
             <div>

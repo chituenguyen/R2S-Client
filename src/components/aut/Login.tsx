@@ -13,18 +13,26 @@ const LoginPage = () => {
     const mutation = useMutation({
       mutationFn: loginUser,
       onSuccess: (data) => {
-        localStorage.setItem("access_token", data.tokens?.accessToken);
-        localStorage.setItem("refresh_token", data.tokens?.refreshToken)
+        localStorage.setItem("token", JSON.stringify({
+          accessToken: data.tokens?.accessToken,
+          refreshToken: data.tokens?.refreshToken
+        }));
         localStorage.setItem("user", JSON.stringify(data.user));
-        toast("Đăng nhập thành công", {position: "top-right"});
+        toast("Đăng nhập thành công", { position: "top-right" });
         setTimeout(() => {
-          navigate('/');
+          if (data.user.roles[0] === 'ADMIN') {
+              navigate('/admin');
+          } else {
+              navigate('/');
+          }
+          window.location.reload();
         }, 1000);
       },
       onError: (errors: any) => {
         toast("Sai tài khoản hoặc mật khẩu", {position: "top-right"})
       }
     })
+    
 
     const onSubmit = (data: LoginResponse) => {
       mutation.mutate(data)
@@ -71,7 +79,7 @@ const LoginPage = () => {
             {...register("password", {
                 require: "Password is required",
                 minLength:{
-                    value: 6,
+                    value: 5,
                     message: "Password must be at least 6 characters"
                 }
             })}

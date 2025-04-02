@@ -48,7 +48,7 @@ export interface Product {
   name: string;
   price: number;
   description: string;
-  images: string[]; 
+  images: string []; 
   category: string;
   brand: string;
   rate: number;
@@ -61,8 +61,43 @@ export interface CartItem {
   id: number;
   name: string;
   price: number;
-  image: string;
+  images: string;
   quantity: number;
   color: string;
   size: string | null;
+}
+
+export interface OrderItem {
+  id: number;
+  name: string;
+  price: number;
+  quantity: number;
+  totalPrice: number;
+  image?: string;
+}
+
+export interface CustomerInfo {
+  firstName: string;
+  companyName?: string;
+  streetAddress: string;
+  apartment?: string;
+  townCity: string;
+  phoneNumber: string;
+  email: string;
+  saveInfo: boolean;
+  paymentMethod: string;
+  orderTotal: number;
+  discount: number;
+  items: OrderItem[];
+}
+
+export interface Order {
+  id: number
+  user_id: number
+  name: string
+  address: string
+  total_amount: string
+  status: string
+  created_at: string
+  updated_at: string
 }

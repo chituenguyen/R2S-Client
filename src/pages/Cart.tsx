@@ -77,7 +77,7 @@ const Cart = () => {
               cart.map((item) => (
                 <tr key={item.id} className="shadow-md rounded">
                   <td className="p-4 flex items-center gap-2 min-w-[380px] text-[16px]">
-                    <img src={item.image} alt={item.name} className="w-16 h-16" />
+                    <img src={item.images} alt={item.name} className="w-16 h-16" />
                     {item.name}
                   </td>
                   <td className="p-4 min-w-[180px] text-[16px]">${item.price}</td>

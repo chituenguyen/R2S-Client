@@ -8,6 +8,13 @@ import Contact from '../pages/Contact'
 import Cart from '../pages/Cart'
 import Profile from '../pages/Profile'
 import CheckOut from '../pages/CheckOut'
+import Adminpage from '../Admin/AdminPage'
+import Dashboard from '../Admin/DashBoard'
+import Users from '../Admin/User'
+import Orders from '../Admin/Orders'
+import Products from '../Admin/Products'
+import Setting from '../Admin/Setting'
+import MqttComponent from '../components/MqttComponent'
 
 // import PostDetail from '../components/effect/postDetail'
 export const routes: RouteObject[] = [
@@ -56,4 +63,36 @@ export const routes: RouteObject[] = [
     element: <CheckOut/>,
     children:[]
   },
+  {
+    path: '/mqtt',
+    element: <MqttComponent/>,
+    children:[]
+  },
+  {
+    path: '/admin',
+    element: <Adminpage />,
+    children: [
+      {
+        index: true,
+        element: <Dashboard />
+      },
+      {
+        path: 'users',
+        element: <Users />
+      },
+      {
+        path: 'orders',
+        element: <Orders />
+      },
+      {
+        path: 'products',
+        element: <Products />
+      },
+      {
+        path: 'setting',
+        element: <Setting />
+      }
+    ]
+  }
+  
 ]

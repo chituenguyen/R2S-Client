@@ -11,14 +11,14 @@ const api = axios.create({
 
 // Lấy danh sách tất cả sản phẩm
 export const getProductList = async (): Promise<Product[]> => {
-  const { data } = await api.get("/products");
+  const { data } = await axios.get("https://devapi.uniscore.vn/uri/api/products");
   return Array.isArray(data.data) ? data.data : [];
 };
 
 // Lấy sản phẩm theo ID
 export const getProductById = async (productId: number): Promise<Product | null> => {
   try {
-    const { data } = await api.get(`/products/${productId}`);
+    const { data } = await axios.get(`https://devapi.uniscore.vn/uri/api/products/${productId}`);
     if (!data.data) {
       throw new Error("Product not found");
     }
@@ -29,4 +29,3 @@ export const getProductById = async (productId: number): Promise<Product | null>
   }
 };
 
-export default api;

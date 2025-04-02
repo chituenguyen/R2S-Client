@@ -43,7 +43,7 @@ const ProductDetail = () => {
       id: product.id,
       name: product.name,
       price: product.price,
-      image: selectedImage,
+      images: selectedImage,
       quantity,
       color: selectedColor,
       size: selectedSize

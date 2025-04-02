@@ -3,12 +3,13 @@ import { Link } from "react-router-dom"
 import { FaRegHeart } from "react-icons/fa"
 import { FiShoppingCart } from "react-icons/fi"
 import { HiOutlineMenu, HiX } from "react-icons/hi" // Hamburger Icon
-import Search from "../Layout/Search"
+import Search from "./Search"
 import { FaUser } from "react-icons/fa"
 
 const Header: React.FC = () => {
   const [cartCount, setCartCount] = useState(0)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false);
   const [username, setUsername] = useState<string | null>(null)
   const [showTooltip, setShowTooltip] = useState(false)
   const avatarRef = useRef<HTMLDivElement>(null)
@@ -23,7 +24,9 @@ const Header: React.FC = () => {
     // Kiểm tra trạng thái đăng nhập
     const loggedIn = localStorage.getItem("isLoggedIn") === "true"
     const storedUsername = localStorage.getItem("username") // Lấy tên từ localStorage
+    const adminStatus = localStorage.getItem("isAdmin") === "true" // Kiểm tra trạng thái admin
     setIsLoggedIn(loggedIn)
+    setIsAdmin(adminStatus)
     setUsername(storedUsername)
 
     // Lấy giỏ hàng từ localStorage
@@ -120,11 +123,11 @@ const Header: React.FC = () => {
           }`}
         >
           <Link
-            to="/"
+            to={isAdmin ? "/products" : "/"}
             className="hover:underline"
             onClick={() => setMenuOpen(false)}
           >
-            Home
+            {isAdmin ? "Products" : "Home"}
           </Link>
           <Link
             to="/contact"
@@ -149,7 +152,16 @@ const Header: React.FC = () => {
               Sign Up
             </Link>
           )}
-          {isLoggedIn && (
+          {isLoggedIn && isAdmin && (
+            <Link
+              to="/setting"
+              className="hover:underline"
+              onClick={() => setMenuOpen(false)}
+            >
+              Setting
+            </Link>
+          )}
+          {isLoggedIn && !isAdmin && (
             <Link
               to="/profile"
               className="hover:underline"

@@ -1,50 +1,59 @@
-import { useForm, SubmitHandler } from "react-hook-form";
-import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { useForm, SubmitHandler } from "react-hook-form"
+import axios from "axios"
+import { useMutation } from "@tanstack/react-query"
+import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 
 type Inputs = {
-  email: string;
-  password: string;
-};
+  email: string
+  password: string
+}
 
 const SignIn = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<Inputs>();
+    formState: { errors }
+  } = useForm<Inputs>()
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // API đăng nhập
   const loginUser = async (data: Inputs) => {
-    const response = await axios.post("http://localhost:3000/api/auth/login", data);
-    return response.data;
-  };
+    const response = await axios.post(
+      "https://devapi.uniscore.vn/uri/api/auth/login",
+      data
+    )
+    return response.data
+  }
 
   const { mutate, isPending } = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      localStorage.setItem("accessToken", data.tokens.accessToken);
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("accessToken", data.tokens.accessToken)
+      localStorage.setItem("isLoggedIn", "true")
+      localStorage.setItem("user", JSON.stringify(data.user))
 
-      toast.success("Logged in successfully!", { autoClose: 1500 });
+      toast.success("Logged in successfully!", { autoClose: 1500 })
       setTimeout(() => {
-        navigate("/");
-        window.location.reload();
-      }, 1500);
+        const userRole = data.user.roles[0] // Lấy role của user
+
+        if (userRole === "ADMIN") {
+          navigate("/admin") // Nếu là ADMIN, điều hướng tới ProductManage
+        } else {
+          navigate("/") // Nếu không phải ADMIN, điều hướng về trang chủ
+        }
+        window.location.reload()
+      }, 1500)
     },
     onError: () => {
-      toast.error("Login failed! Please try again.");
-    },
-  });
+      toast.error("Login failed! Please try again.")
+    }
+  })
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    mutate(data);
-  };
+    mutate(data)
+  }
 
   return (
     <div className="flex h-screen justify-center">
@@ -68,28 +77,34 @@ const SignIn = () => {
               required: "Email is required",
               pattern: {
                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/i,
-                message: "Invalid email address",
-              },
+                message: "Invalid email address"
+              }
             })}
             type="text"
             placeholder="Email or Phone Number"
             className="w-full border-b-2 p-2 mb-4 outline-none focus:border-black"
           />
-          {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
+          {errors.email && (
+            <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+          )}
 
           <input
             {...register("password", {
               required: "Password is required",
               minLength: {
                 value: 6,
-                message: "Password must be at least 6 characters",
-              },
+                message: "Password must be at least 6 characters"
+              }
             })}
             type="password"
             placeholder="Password"
             className="w-full border-b-2 p-2 mb-4 outline-none focus:border-black"
           />
-          {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
+          {errors.password && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.password.message}
+            </p>
+          )}
 
           <div className="flex justify-between w-full mt-4">
             <button
@@ -106,7 +121,7 @@ const SignIn = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SignIn;
+export default SignIn

@@ -62,7 +62,7 @@ const RelatedItem = ({ currentProductId }: RelatedProductProps) => {
                     id: product.id,
                     name: product.name,
                     price: product.price,
-                    image: product.images[0],
+                    images: product.images[0],
                     quantity: 1,
                     color: "red",
                     size: null,

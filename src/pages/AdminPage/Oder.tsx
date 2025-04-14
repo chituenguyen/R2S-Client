@@ -2,9 +2,11 @@ import Sidebar from "./Sidebar";
 import * as Product from "../../api/product";
 import { useQuery,useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { useToast } from "../../components/context/ToastContext";
 
 
 const Order: React.FC = () => {
+  const { toast } = useToast();
     const productsPerPage = 10; // Số sản phẩm hiển thị trên mỗi trang
     const [currentPage, setCurrentPage] = useState(1);
     const queryClient = useQueryClient();
@@ -20,10 +22,11 @@ const mutate = useMutation({
     onSuccess: () => {
       console.log("Product updated successfully");
       queryClient.invalidateQueries({ queryKey: ['orders'] }); // Làm mới dữ liệu
+      toast("Product updated successfully")
     },
     onError: (err: any) => {
       console.error("Update Product Error:", err);
-      alert("Update product error");
+      toast("Update product error");
     },
   });
   

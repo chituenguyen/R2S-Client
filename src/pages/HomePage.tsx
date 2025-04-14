@@ -7,7 +7,8 @@ import { TbTruckDelivery } from "react-icons/tb";
 import { RiCustomerService2Fill } from "react-icons/ri";
 import { IoShieldCheckmarkOutline } from "react-icons/io5";
 import ProductList from "../components/List/ProductList";
-
+import MqttClient from "../MQTT/MqttClient"
+import { FaCommentDots } from "react-icons/fa";
 let PRODUCT_PER_PAGE = 8; // Số sản phẩm hiển thị trên mỗi trang
 
 function HomePage() {
@@ -26,6 +27,10 @@ function HomePage() {
   const handleShowAllProducts = () => {
     setCurrentProduct(1); // Reset về trang đầu tiên
     PRODUCT_PER_PAGE = data.data.length; // Hiển thị tất cả sản phẩm trên 1 trang
+  };
+  const [showMqtt, setShowMqtt] = useState(false);
+  const toggleMqtt = () => {
+    setShowMqtt(!showMqtt);
   };
 
   return (
@@ -108,6 +113,19 @@ function HomePage() {
         </div>
       </div>
       <div className="border-t border-gray-300 w-full"></div>
+
+      <div
+        className="fixed bottom-4 right-4 bg-blue-500 text-white rounded-full p-3 cursor-pointer"
+        onClick={toggleMqtt}
+      >
+        <FaCommentDots className="w-6 h-6" />
+      </div>
+
+      {showMqtt && (
+        <div className="fixed bottom-24 right-4 z-50">
+          <MqttClient />
+        </div>
+      )}
     </div>
   );
 }

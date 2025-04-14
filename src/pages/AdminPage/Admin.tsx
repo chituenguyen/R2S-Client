@@ -138,9 +138,6 @@ function AdminPage() {
             
                 {/* Danh sách sản phẩm */}
                 <table className="w-full border-collapse border border-gray-300">
-                    <div className="flex justify-center mt-4">
-                        {renderPageNumbers}
-                    </div>
                   <thead>
                     <tr>
                       <th className="border border-gray-300 p-2 w-[50px]" >ID</th>
@@ -178,6 +175,9 @@ function AdminPage() {
                     ))}
                   </tbody>
                 </table>
+                <div className="flex justify-center mt-4">
+                        {renderPageNumbers}
+                    </div>
               </div>
         </div>
     );

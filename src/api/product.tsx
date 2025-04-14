@@ -2,13 +2,13 @@ import axios from "axios";
 import { Dataput } from "../redux/type";
 
 export const getProductList = async () => {
-    const res = await axios.get(`https://devapi.uniscore.vn/uri/api/products`);
+    const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/products`);
     return res.data;
   };
 
   export const getProductDetail = async (id: number) => {
     try {
-      const res = await axios.get(`https://devapi.uniscore.vn/uri/api/products/${id}`);
+      const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/products/${id}`);
       // console.log("API Response:", res.data); // In phản hồi API
       return res.data;
     } catch (error) {
@@ -19,7 +19,7 @@ export const getProductList = async () => {
 
   export const pushOrder = async (data: any) => {
     try {
-      const res = await axios.post(`https://devapi.uniscore.vn/uri/api/orders`, data, {
+      const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/orders`, data, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -41,7 +41,7 @@ export const getProductList = async () => {
             headers.Authorization = `Basic ${encodedCredentials}`;
         }
 
-        const res = await axios.put(`https://devapi.uniscore.vn/uri/api/products/3`, formData, { // Gửi formData
+        const res = await axios.put(`${import.meta.env.VITE_BASE_URL}/products/3`, formData, { // Gửi formData
             headers: headers,
         });
 
@@ -55,7 +55,7 @@ export const getProductList = async () => {
 
 export const AllOrder = async () => {
     try {
-        const res = await axios.get(`https://devapi.uniscore.vn/uri/api/orders`);
+        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/orders`);
         return res.data;
     } catch (error) {
         console.error("Error in AllOrder:", error);
@@ -64,7 +64,7 @@ export const AllOrder = async () => {
 }
 export const ChangeStatus = async (id: number, status: string) => {
   try {
-    const res = await axios.put(`https://devapi.uniscore.vn/uri/api/orders/${id}`, { status: status });
+    const res = await axios.put(`${import.meta.env.VITE_BASE_URL}/orders/${id}`, { status: status });
     return res.data;
   } catch (error) {
     console.error("Error in ChangeStatus:", error);
@@ -75,7 +75,7 @@ export const ChangeStatus = async (id: number, status: string) => {
 async function searchProducts(name: string) {
   try {
     const response = await axios.get(
-      `https://devapi.uniscore.vn/uri/api/products/search?name=${encodeURIComponent(name)}`
+      `${import.meta.env.VITE_BASE_URL}/products/search?name=${encodeURIComponent(name)}`
     );
     return response.data;
   } catch (error) {

@@ -3,151 +3,234 @@ import { CiHeart } from "react-icons/ci";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import * as product from "../redux/api/axios";
 import { Product } from "../redux/types/user.types";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { CiSearch } from "react-icons/ci";
 
 const PRODUCT_PER_PAGE = 8;
 
 function SupportSection() {
-  const services = [
-    {
-      src: "assets/images/fast-delivery-icon-free-vector.jpg",
-      title: "FREE AND FAST DELIVERY",
-      description: "Free delivery for all orders over $140",
-    },
-    {
-      src: "assets/images/customer service.png",
-      title: "24/7 CUSTOMER SERVICE",
-      description: "Friendly 24/7 customer support",
-    },
-    {
-      src: "assets/images/png-clipart-money-back-guarantee-computer-icons-search-button-miscellaneous-service.png",
-      title: "MONEY BACK GUARANTEE",
-      description: "We return money within 30 days",
-    },
-  ];
-
   return (
-    <div className="py-10 border-b my-10">
-      <div className="container mx-auto flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-        {services.map((service, index) => (
-          <div key={index} className="flex flex-col items-center md:w-1/3 px-4">
-            <img src={service.src} alt={service.title} className="w-16 h-16 mb-4" />
-            <h3 className="font-bold text-lg">{service.title}</h3>
-            <p className="text-gray-600 text-sm">{service.description}</p>
+    <div className="flex flex-row justify-center items-center gap-6 sm:gap-4 md:gap-20 lg:gap-20 xl:gap-20 2xl:gap-20 mt-20">
+      <div className="flex flex-col items-center text-center">
+        <div className="w-[80px] h-[80px] flex items-center justify-center bg-gray-300 rounded-full">
+          <div className="w-[58px] h-[58px] flex items-center justify-center bg-white rounded-full">
+            <img 
+              src="assets/images/fast-delivery-icon-free-vector.jpg" 
+              alt="Delivery" 
+              className="w-[40px] h-[40px]" 
+            />
           </div>
-        ))}
+        </div>
+        <h3 className="text-[16px] sm:text-[20px] font-semibold mt-4">FREE AND FAST DELIVERY</h3>
+        <p className="text-gray-600 text-[12px] sm:text-[14px]">Free delivery for all orders over $140</p>
+      </div>
+      <div className="flex flex-col items-center text-center">
+        <div className="w-[80px] h-[80px] flex items-center justify-center bg-gray-300 rounded-full">
+          <div className="w-[58px] h-[58px] flex items-center justify-center bg-white rounded-full">
+            <img 
+              src="assets/images/customer service.png" 
+              alt="CService" 
+              className="w-[40px] h-[40px]" 
+            />
+          </div>
+        </div>
+        <h3 className="text-[16px] sm:text-[20px] font-semibold mt-4">24/7 CUSTOMER SERVICE</h3>
+        <p className="text-gray-600 text-[12px] sm:text-[14px]">Friendly 24/7 customer support</p>
+      </div>
+      <div className="flex flex-col items-center text-center">
+        <div className="w-[80px] h-[80px] flex items-center justify-center bg-gray-300 rounded-full">
+          <div className="w-[58px] h-[58px] flex items-center justify-center bg-white rounded-full">
+            <img 
+              src="assets/images/png-clipart-money-back-guarantee-computer-icons-search-button-miscellaneous-service.png" 
+              alt="Icon-secure" 
+              className="w-[40px] h-[40px]" 
+            />
+          </div>
+        </div>
+        <h3 className="text-[16px] sm:text-[20px] font-semibold mt-4">MONEY BACK GUARANTEE</h3>
+        <p className="text-gray-600 text-[12px] sm:text-[14px]">We return money within 30 days</p>
       </div>
     </div>
   );
 }
 
 function HomePage() {
-  const { data, isPending, error } = useQuery({ queryKey: ["product"], queryFn: product.getProductList });
+  const { data, isPending, error } = useQuery({ 
+    queryKey: ["product"], 
+    queryFn: product.getProductList 
+  });
   const navigate = useNavigate();
-  const currentProductList = useMemo(() => (data ? data.slice(0, PRODUCT_PER_PAGE) : []), [data]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
+  
+  const currentProductList = useMemo(() => {
+    const products = data || [];
+    // Filter products based on search term
+    const filtered = searchTerm.length > 0
+      ? products.filter(product => 
+          product.name.toLowerCase().includes(searchTerm.toLowerCase()))
+      : products;
+    return filtered.slice(0, PRODUCT_PER_PAGE);
+  }, [data, searchTerm]);
 
   const handleAddToCart = (product: Product) => {
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-
     const existingProduct = cart.find((item: Product) => item.id === product.id);
 
     if (existingProduct) {
       existingProduct.quantity += 1;
     } else {
-      cart.push({ ...product, quantity: 1 });
+      cart.push({ 
+        ...product, 
+        quantity: 1,
+        color: "red",
+        size: null,
+        image: product.images[0]
+      });
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
-    toast.success("Added to cart successfully!");
+    toast.success("Product added to cart!", {
+      position: "top-right",
+      autoClose: 1500,
+    });
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 1500);
   };
 
   if (error) {
-    return <p className="text-red-500 text-center">Failed to load products. Please try again later.</p>;
+    return <p className="text-red-500 text-center py-10">Failed to load products. Please try again later.</p>;
   }
 
   const Skeleton = () => (
-    <div className="animate-pulse grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="animate-pulse grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 px-4 sm:px-6">
       {Array.from({ length: PRODUCT_PER_PAGE }).map((_, index) => (
-        <div key={index} className="bg-gray-200 h-40 rounded-md"></div>
+        <div key={index} className="bg-gray-200 h-60 sm:h-72 rounded-md"></div>
       ))}
     </div>
   );
 
   return (
-    <div className="max-w-screen-xl mx-auto py-6">
-      <header className="mb-10">
-        <div className="flex items-center">
-          <div className="bg-red-500 w-2 h-8 mr-2"></div>
-          <div className="text-red-500 font-medium text-sm">Our Products</div>
+    <div className="mx-auto py-12 w-full max-w-[100vw] overflow-x-hidden px-4 xl:px-40">
+      <h2 className="text-[36px] font-semibold mb-6 font-[Inter]">Explore Our Products</h2>
+      
+      {/* Search Bar */}
+      <div className="relative w-full max-w-md mb-6">
+        <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+          <span className="px-3">
+          <CiSearch />
+          </span>
+          <input 
+            type="text" 
+            placeholder="Search products..." 
+            value={searchTerm} 
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setShowDropdown(e.target.value.length > 0);
+            }}
+            onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+            className="w-full p-2 outline-none"
+          />
         </div>
-        <h2 className="text-4xl font-semibold mt-2">Explore Our Products</h2>
-      </header>
 
-      <section>
+        {showDropdown && searchTerm.length > 0 && currentProductList.length > 0 && (
+          <ul className="absolute w-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+            {currentProductList.map((product: Product) => (
+              <li 
+                key={product.id} 
+                onClick={() => {
+                  setSearchTerm(product.name);
+                  setShowDropdown(false);
+                }}
+                className="p-3 hover:bg-gray-100 cursor-pointer transition"
+              >
+                {product.name}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    
+      {/* Product Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 min-h-[100px]">
         {isPending ? (
-          <Skeleton />
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {currentProductList.length === 0 ? (
-              <p className="text-gray-600">Không có sản phẩm nào.</p>
-            ) : (
-              currentProductList.map((product: Product) => (
-                <div
-                  key={product.id}
-                  className="group bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 relative"
-                  onClick={() => navigate(`/postpage/${product.id}`)}
-                >
-                  <div className="bg-gray-100 p-4 relative">
-                    <div className="p-10 flex justify-center items-center">
-                      <img
-                        src={product.images[0] || "https://via.placeholder.com/150"}
-                        alt={product.name}
-                        className="h-[180px] w-[115px] object-contain"
-                      />
-                    </div>
-                    <div className="absolute top-4 right-4 flex flex-col space-y-2">
-                      <CiHeart className="h-6 w-6 text-gray-600 cursor-pointer hover:text-red-500 transition" />
-                      <MdOutlineRemoveRedEye className="h-6 w-6 text-gray-600 cursor-pointer hover:text-blue-500 transition" />
-                    </div>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold">{product.name}</h3>
-                    <div className="flex text-yellow-400 mb-2">
-                      {Array.from({ length: 5 }, (_, i) => (
-                        <span key={i} className={i < product.rate ? "text-yellow-500" : "text-gray-300"}>★</span>
-                      ))}
-                    </div>
-                    <div className="text-red-500 font-bold">${product.price}</div>
-                    <p className="text-gray-500 text-sm line-clamp-2">{product.description}</p>
-                  </div>
-
-                  {product.stock > 0 ? (
-                    <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAddToCart(product);
-                    }}
-                    className="absolute bottom-1/2 left-0 w-full bg-black text-white py-3 text-center opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
-                      Add To Cart
-                    </button>
-                  ) : (
-                    <span className="text-red-500 font-medium">Out of stock</span>
-                  )}
+          <p className="col-span-4 text-center">Loading...</p>
+        ) : error ? (
+          <p className="col-span-4 text-center text-red-500">Error loading products</p>
+        ) : currentProductList.length > 0 ? (
+          currentProductList.map((product: Product) => (
+            <div 
+              key={product.id}
+              className="group rounded-lg bg-white transition duration-300 sm:w-full md:max-w-[270px] lg:max-w-[270px] xl:max-w-[270px] 2xl:max-w-[270px]"
+              onClick={() => navigate(`/postpage/${product.id}`)}
+            >
+              {/* Image Container */}
+              <div className="w-full h-[250px] bg-[#F5F5F5] flex flex-col items-center overflow-hidden rounded-md relative">
+                <div className="flex-grow flex items-center justify-center">
+                  <img 
+                    src={product.images[0] || "https://via.placeholder.com/150"} 
+                    alt={product.name} 
+                    className="max-h-[180px] object-contain" 
+                  />
                 </div>
-              ))
-            )}
+                <div className="absolute top-2 right-2 flex flex-col gap-2 items-center">
+                  <CiHeart className="w-[34px] h-[34px] cursor-pointer text-gray-600 hover:text-red-500" />
+                  <MdOutlineRemoveRedEye className="w-[34px] h-[34px] cursor-pointer text-gray-600 hover:text-blue-500" />
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddToCart(product);
+                  }}
+                  className="absolute bottom-0 left-0 w-full bg-black text-white py-3 text-center opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0"
+                >
+                  Add To Cart
+                </button>
+              </div>
+              
+              {/* Product Info */}
+              <h3 className="text-[16px] font-medium mt-3">{product.name}</h3>
+              <div className="flex items-center gap-3">
+                <span className="text-red-500 text-[16px] font-medium">${product.price}</span>
+                <div className="flex items-center gap-1">               
+                  {[...Array(5)].map((_, i) => (
+                    i < (product.rate || 4) ? (
+                      <span key={i} className="text-yellow-500">★</span>
+                    ) : (
+                      <span key={i} className="text-gray-300">★</span>
+                    )
+                  ))}
+                  <span className="text-gray-500 text-[14px] font-medium">
+                    ({product.stock || 50})
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="col-span-4 flex items-center justify-center">
+            No products found
           </div>
         )}
-      </section>
-      <div className="text-center mt-6">
-        <button className="bg-red-500 text-white py-2 px-6 rounded-full text-lg hover:bg-red-600">
+      </div>
+
+      <div className="text-center mt-10">
+        <button 
+          className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-6 rounded-full transition"
+          onClick={() => navigate('/products')}
+        >
           View All Products
         </button>
       </div>
+
       <SupportSection />
+      
+      <div className="flex flex-col md:flex-row justify-center items-center gap-8 mt-10 border-t border-gray-300 pt-2"></div>
     </div>
   );
 }

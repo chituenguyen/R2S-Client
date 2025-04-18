@@ -68,7 +68,7 @@ function SignUp(){
   return(
     <div className="flex h-screen">
     <div className="w-2/3 bg-white flex justify-center items-center">
-    <img src="https://s3-alpha-sig.figma.com/img/75f3/94c0/a1c7dc5b68a42239311e510f54d8cd59?Expires=1742774400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=K2Hla1RJW2hhJuUGqF1wo3ntGOIwkYPowANn3pKglx5jZVRaSJRrbIpuUaa8kWoClS-20A1rQ0MB3eOCUup64yHkSDbrzp482PArEdNYb~yDvbnSjtZLQORMxREpumXWU1LEmnkYGlxVvHkYJ0fpvD0nONV1lKEPohpSn54FyKdTk0x~5jVU8DwOIQgAqLT-9Ce0nucyChZK2tdSjPYIYmA65bOex9d-WYIOdePt03mxdtFBzyw2oRsQ4pA9j7e-bVSIuQaxufUdbh9Rlz0ylZDssdRq4gZMeqif8X71cpHTb4zHB5OlSrIMqJg1RxlxIxx8mnHFLHYyTHKwBulL3w__"
+    <img src="/assets/ShoppingCart.jpg"
      alt="Shopping Cart" className="max-w-full" />
   </div>
   <div className="w-1/3 bg-white flex flex-col justify-center p-20">

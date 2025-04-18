@@ -34,15 +34,15 @@ function HomePage() {
   };
 
   return (
-    <div className="max-w-screen-xl mx-auto py-6 mt-[50px]">
+    <div className="mx-auto py-6 mt-[50px]">
       <header className="mb-10">
         <div className="flex items-center">
           <div className="bg-red-500 w-2 h-8 mr-2"></div>
           <div className="text-red-500 font-medium text-sm">Our Products</div>
         </div>
-        <div className="flex items-center space-x-4 justify-between">
-          <div className="text-4xl font-semibold mt-2">Explore Our Products</div>
-          <div className="flex items-center space-x-2 ml-auto">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
+          <div className="text-2xl sm:text-4xl font-semibold mt-2">Explore Our Products</div>
+          <div className="flex items-center space-x-2">
             <button className="bg-gray-100 rounded-full p-2">
               <AiFillCaretLeft className="h-5 w-5" />
             </button>
@@ -57,7 +57,7 @@ function HomePage() {
           {isPending ? (
             <ProductSkeleton />
           ) : (
-            <ProductList  PRODUCT_PER_PAGE={PRODUCT_PER_PAGE}/>
+            <ProductList PRODUCT_PER_PAGE={PRODUCT_PER_PAGE} />
           )}
         </section>
 
@@ -66,7 +66,7 @@ function HomePage() {
           <div className="col-span-full text-center mt-4 ">
             <div className="border-t border-gray-300 w-full mt-4"></div>
             <button
-              className="bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-10  rounded "
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-10 rounded "
               onClick={handleShowAllProducts}
             >
               View All Products

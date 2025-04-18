@@ -13,6 +13,7 @@ import Orders from '../Admin/components/Orders'
 import Products from '../Admin/components/Products'
 import Settings from '../Admin/components/Settings'
 import Users from '../Admin/components/Users'
+import ChatPage from '../pages/ChatPage'
 
 
 export const routes: RouteObject[] = [
@@ -86,6 +87,10 @@ export const routes: RouteObject[] = [
         element: <Settings />
       }
     ]
-  }
-  
+  },
+  {
+    path: '/chatpage',  
+    element: <ChatPage />,
+    children: []
+  },
 ]

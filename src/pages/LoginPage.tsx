@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { login } from "../redux/slices/loginSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ChatPage from "./ChatPage";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -65,6 +66,8 @@ function LoginPage() {
       
       {/* Navbar */}
       <Navbarpage />
+
+      <ChatPage />
       
       {/* Divider line */}
       <div className="w-full h-[1px] mt-5 border-t border-gray-300 opacity-30 mx-auto"></div>

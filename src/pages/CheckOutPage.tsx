@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, CreditCard, Truck, CheckCircle } from 'lucide-react';
+import ChatPage from './ChatPage';
 
 type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered';
 
@@ -194,6 +195,7 @@ function CheckoutPage() {
 
   return (
     <div className="w-full mx-auto mt-10">
+      <ChatPage/>
       <Link to="/home" className="block mb-5">
         <h1 className="text-2xl font-bold text-center">Checkout</h1>
       </Link>

@@ -1,9 +1,4 @@
 import React, { useState } from "react"
-import ps1 from "../../assets/ps5_1.jpg"
-import ps2 from "../../assets/ps5_2.jpg"
-import ps3 from "../../assets/ps5_3.jpg"
-import ps4 from "../../assets/ps5_4.jpg"
-import ps5 from "../../assets/ps5_5.jpg"
 import detail3 from "../../assets/detail3.jpg"
 import ship from "../../assets/ship1.jpg"
 import refesh from "../../assets/refesh.jpg"
@@ -12,6 +7,7 @@ import visible from "../../assets/visible.png"
 import { Link, useParams } from "react-router-dom"
 import { useProducts } from "../redux/slices/productSlice"
 import Navbarpage from "../pages/Navbarpage"
+import ChatPage from "../pages/ChatPage"
 
 
 
@@ -74,7 +70,7 @@ const ProductDetail = () => {
       <Link to="/home">
         <Navbarpage />
       </Link>
-
+        <ChatPage />
       {/* Thanh phân cách */}
       <div className="w-full h-[1px] mt-5 border-t border-gray-300 opacity-30 mx-auto"></div>
        
@@ -83,28 +79,28 @@ const ProductDetail = () => {
             <div className="w-[170px] h-[138px]  rounded-sm bg-[#F5F5F5]">
               <img
                 className="w-[121px] h-[114px] object-cover mx-auto"
-              src={product.images?.[0] || ps1}
+              src={product.images?.[0] }
               alt=""
             />
           </div>
           <div className="w-[170px] h-[138px]  rounded-sm my-4 bg-[#F5F5F5]">
             <img
               className="w-[112px] h-[97px] object-cover  mx-auto"
-              src={product.images?.[0] || ps2}
+              src={product.images?.[0] }
               alt=""
             />
           </div>
           <div className="w-[170px] h-[138px] rounded-sm my-4 bg-[#F5F5F5]">
             <img
               className="w-[134px] h-[94px] object-cover mx-auto"
-              src={product.images?.[0] || ps3}
+              src={product.images?.[0] }
               alt=""
             />
           </div>
           <div className="w-[170px] h-[138px]  rounded-sm bg-[#F5F5F5]">
             <img
               className="w-[122px] h-[106px] object-cover mx-auto"
-              src={product.images?.[0] || ps4}
+              src={product.images?.[0] }
               alt=""
             />
           </div>
@@ -115,7 +111,7 @@ const ProductDetail = () => {
           <div className="mt-20">
             <img
               className="w-[446px] h-[315px] object-cover mx-auto"
-              src={product.images?.[0] || ps5}
+              src={product.images?.[0] }
               alt=""
             />
           </div>

@@ -10,6 +10,7 @@ import ship3 from "../../assets/ship-3.jpg"
 import { useProducts } from "../redux/slices/productSlice"
 import { Link} from "react-router-dom"
 import Navbarpage from "./Navbarpage"
+import ChatPage from "./ChatPage"
 
 interface Product {
   id: number;
@@ -90,6 +91,8 @@ function HomePage() {
   return (
     <div className="mt-10">
       <Navbarpage />
+      <ChatPage />
+
       {/* Thanh phân cách */}
       <div className="w-full h-[1px] mt-5 border-t border-gray-300 opacity-30 mx-auto"></div>
 

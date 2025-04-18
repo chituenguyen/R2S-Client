@@ -8,6 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { register } from "../redux/slices/registerSilce";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ChatPage from "./ChatPage";
 
 function SignUpPage() {
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ function SignUpPage() {
       <Link to="/home">
         <Navbarpage />
       </Link>
-
+      <ChatPage />
       {/* Thanh phân cách */}
       <div className="w-full h-[1px] mt-5 border-t border-gray-300 opacity-30 mx-auto"></div>
 
